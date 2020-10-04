@@ -1,5 +1,6 @@
 #include "index.h"
 #include "kvstore.h"
+#include "context_table.h"
 #include "fingerprint_cache.h"
 #include "index_buffer.h"
 #include "../storage/containerstore.h"
@@ -24,6 +25,8 @@ guint g_feature_hash(char *feature){
 
 extern void init_segmenting_method();
 extern void init_sampling_method();
+
+extern void init_champion_method();
 
 void init_index() {
     /* Do NOT assign a free function for value. */
@@ -112,8 +115,11 @@ void init_index() {
 
     init_sampling_method();
     init_segmenting_method();
-    
+    init_champion_method();
+
     init_kvstore();
+
+    init_context_table();
 
     init_fingerprint_cache();
 

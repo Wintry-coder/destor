@@ -7,6 +7,7 @@
 #ifndef CONTEXT_TABLE_H
 #define CONTEXT_TABLE_H
 #include "../destor.h"
+#include "index.h"
 
 struct contextItem {
 	segmentid id;;
