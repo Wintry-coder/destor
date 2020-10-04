@@ -14,7 +14,10 @@ struct contextItem {
 	double score;
 };
 
+void init_context_table();
 
+
+struct contextItem *find_item(GList *contextList, bool minitem);
 
 
 #endif 

@@ -15,7 +15,7 @@ static struct contextItem* champion_choose_greedy(GList* contextList) {
     srand(time(NULL));
     double randnum = rand()/(RAND_MAX+1.0);
     if (randnum < 1 - EPSILON) {
-        return find_max_Item(contextList);
+        return find_item(contextList, 0);
     } else {
         return champion_choose_random(contextList);
     }

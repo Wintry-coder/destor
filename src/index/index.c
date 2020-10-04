@@ -112,7 +112,7 @@ void init_index() {
 
     init_sampling_method();
     init_segmenting_method();
-
+    
     init_kvstore();
 
     init_fingerprint_cache();
