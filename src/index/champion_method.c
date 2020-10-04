@@ -7,16 +7,14 @@ struct contextItem *(*champion_choose)(GList *contextList);
 static struct contextItem* champion_choose_random(GList* contextList) {
     srand(time(NULL));
     int contextList_length = g_list_length(contextList);
-    double rand_num = rand()/(RAND_MAX/1.0);
-    int contextList_length = g_list_length(ctxtList);
-    int index_ = (int) (rand_num * contextList_length);
-    return g_list_nth_data(contextList, index_);
+    int index = rand()/contextList_length;
+    return g_list_nth_data(contextList, index);
 }
 
 static struct contextItem* champion_choose_greedy(GList* contextList) {
     srand(time(NULL));
-    double rand_num = rand()/(RAND_MAX/1.0);
-    if (rand_num < 1 - EPSILON) {
+    double randnum = rand()/(RAND_MAX+1.0);
+    if (randnum < 1 - EPSILON) {
         return find_max_Item(contextList);
     } else {
         return champion_choose_random(contextList);
@@ -24,7 +22,8 @@ static struct contextItem* champion_choose_greedy(GList* contextList) {
 }
 
 static struct contextItem* champion_choose_recent(GList* contextList) {
-    GList* p = g_list_last(contextList);
+    GList* recentitem = g_list_last(contextList);
+    return recentitem -> data;
 }
 
 void init_champion_method(){
