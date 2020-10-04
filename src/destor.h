@@ -190,6 +190,12 @@
 #define UNSET_CHUNK(c, f) (c->flag &= ~f)
 #define CHECK_CHUNK(c, f) (c->flag & f)
 
+/* context table */
+#define CHAMPIOM_CHOOSE_RANDOM 1
+#define CHAMPIOM_CHOOSE_GREEDY 2
+#define CHAMPIOM_CHOOSE_RECENT 3
+
+
 struct destor {
 	sds working_directory;
 	int simulation_level;
@@ -277,6 +283,9 @@ struct destor {
 	int32_t live_container_num;
 
 	int backup_retention_time;
+
+	/* The context table */
+	int champion_choose_method;
 
 } destor;
 

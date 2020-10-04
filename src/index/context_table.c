@@ -5,5 +5,6 @@
  *      Author: Yanweijie
  */
 
+#include "context_table.h"
 
-static int (*chunking)(unsigned char* buf, int size);
+

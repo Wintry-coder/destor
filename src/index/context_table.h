@@ -6,12 +6,10 @@
  */
 #ifndef CONTEXT_TABLE_H
 #define CONTEXT_TABLE_H
+#include "../destor.h"
 
 struct contextItem {
-    //contextid id; // context table item id
-
-	//segmentid segment_id;
-	struct segment* segment_ptr;
+	segmentid id;;
 	int followers;
 	double score;
 };
