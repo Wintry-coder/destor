@@ -19,6 +19,7 @@ void init_context_table();
 
 
 struct contextItem *find_item(GList *contextList, bool minitem);
-
+void free_contextItem(struct contextItem* item);
+struct contextItem* new_contextItem(struct segment* segment);
 
 #endif 

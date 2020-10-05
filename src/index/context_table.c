@@ -40,3 +40,17 @@ void init_context_table() {
     context_table = g_hash_table_new_full(g_feature_hash, g_feature_equal, free, NULL);
     VERBOSE("initial context table");
 }
+
+struct contextItem* new_contextItem(struct segment* segment){
+    assert(segment);
+	struct contextItem* newItem = (struct contextItem*) malloc(sizeof(struct contextItem));
+	newItem ->followers = 4;
+	newItem ->score = 0;
+    newItem ->id = segment ->id;
+	return newItem;
+}
+
+void free_contextItem(struct contextItem* item) {
+	printf("free context table item\n");
+    free(item);
+}
