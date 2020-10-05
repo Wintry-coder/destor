@@ -51,4 +51,81 @@ void index_lookup_lipa(struct segment *s) {
         //prefetch champion and followers fingerprint into cache
         fp_prefetch(contextList, champion, (char*) key);
     }
+    
+    GSequenceIter *iter = g_sequence_get_begin_iter(s->chunks);
+	GSequenceIter *end = g_sequence_get_end_iter(s->chunks);
+	for (; iter != end; iter = g_sequence_iter_next(iter)) {
+		struct chunk* c = g_sequence_get(iter);
+
+		if (CHECK_CHUNK(c, CHUNK_FILE_START) || CHECK_CHUNK(c, CHUNK_FILE_END))
+			continue;
+
+		/* First check it in the storage buffer */
+		if(storage_buffer.container_buffer
+				&& lookup_fingerprint_in_container(storage_buffer.container_buffer, &c->fp)){
+			c->id = get_container_id(storage_buffer.container_buffer);
+			SET_CHUNK(c, CHUNK_DUPLICATE);
+			SET_CHUNK(c, CHUNK_REWRITE_DENIED);
+		}
+		/*
+		 * First check the buffered fingerprints,
+		 * recently backup fingerprints.
+		 */
+		GQueue *tq = g_hash_table_lookup(index_buffer.buffered_fingerprints, &c->fp);
+		if (!tq) {
+			tq = g_queue_new();
+		} else if (!CHECK_CHUNK(c, CHUNK_DUPLICATE)) {
+			struct indexElem *be = g_queue_peek_head(tq);
+			c->id = be->id;
+			SET_CHUNK(c, CHUNK_DUPLICATE);
+		}
+
+		/* Check the fingerprint cache */
+		if (!CHECK_CHUNK(c, CHUNK_DUPLICATE)) {
+			/* Searching in fingerprint cache */
+			int64_t id = fingerprint_cache_lookup(&c->fp);
+			if(id != TEMPORARY_ID){
+				c->id = id;
+				SET_CHUNK(c, CHUNK_DUPLICATE);
+			}
+		}
+
+		if(destor.index_category[0] == INDEX_CATEGORY_EXACT
+				|| destor.index_segment_selection_method[0] == INDEX_SEGMENT_SELECT_MIX){
+			if (!CHECK_CHUNK(c, CHUNK_DUPLICATE)) {
+				/* Searching in key-value store */
+				int64_t* ids = kvstore_lookup((char*)&c->fp);
+				if(ids){
+					index_overhead.lookup_requests++;
+					/* prefetch the target unit */
+					fingerprint_cache_prefetch(ids[0]);
+					int64_t id = fingerprint_cache_lookup(&c->fp);
+					if(id != TEMPORARY_ID){
+						/*
+						 * It can be not cached,
+						 * since a partial key is possible in near-exact deduplication.
+						 */
+						c->id = id;
+						SET_CHUNK(c, CHUNK_DUPLICATE);
+					}else{
+						NOTICE("Filter phase: A key collision occurs");
+					}
+				}else{
+					index_overhead.lookup_requests_for_unique++;
+					VERBOSE("Dedup phase: non-existing fingerprint");
+				}
+			}
+		}
+
+		/* Insert it into the index buffer */
+		struct indexElem *ne = (struct indexElem*) malloc(
+				sizeof(struct indexElem));
+		ne->id = c->id;
+		memcpy(&ne->fp, &c->fp, sizeof(fingerprint));
+
+		g_queue_push_tail(tq, ne);
+		g_hash_table_replace(index_buffer.buffered_fingerprints, &ne->fp, tq);
+
+		index_buffer.chunk_num++;
+	}
 }
