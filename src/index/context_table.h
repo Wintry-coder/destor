@@ -22,4 +22,9 @@ struct contextItem *find_item(GList *contextList, bool minitem);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
 
+extern void (*close_context)();
+extern int64_t* (*context_lookup)(char *key);
+extern int64_t* (*context_find)(char *key);
+extern void (*context_update)(char *key, int64_t id);
+extern void (*context_delete)(char* key, int64_t id);
 #endif 

@@ -27,6 +27,12 @@ void index_lookup_lipa(struct segment *s) {
     struct contextItem* champion;
 
     while(g_hash_table_iter_next(&iter, &key, &value)) {
-        
+        GList* contextList = NULL;
+        if (g_hash_table_contains(, (fingerprint *) key)) {
+            hit++;
+            // this feature exist a ctxtTable List;
+            ctxtList = g_hash_table_lookup(ctxtTable, (fingerprint *) key);
+
+        }
     }
 }

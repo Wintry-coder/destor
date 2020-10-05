@@ -9,6 +9,18 @@
 
 static GHashTable *context_table;
 
+extern void close_context_table();
+extern int64_t* context_table_lookup(char* key);
+extern int64_t* context_table_find(char* key);
+extern void context_table_update(char* key, int64_t id);
+extern void context_table_delete(char* key, int64_t id);
+
+void (*close_context)();
+int64_t* (*context_lookup)(char *key);
+int64_t* (*context_find)(char *key);
+void (*context_update)(char *key, int64_t id);
+void (*context_delete)(char* key, int64_t id);
+
 struct contextItem *find_item(GList *contextList, bool minitem) {
     struct contextItem* item = contextList -> data;
     struct contextItem* current = item;
@@ -38,6 +50,12 @@ struct contextItem *find_item(GList *contextList, bool minitem) {
  */
 void init_context_table() {
     context_table = g_hash_table_new_full(g_feature_hash, g_feature_equal, free, NULL);
+    close_context = close_context_table;
+
+    context_lookup = context_table_lookup;
+    context_find = context_table_find;
+    context_update = context_table_update;
+    context_delete = context_table_delete;
     VERBOSE("initial context table");
 }
 
