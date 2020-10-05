@@ -1,7 +1,7 @@
 /*
- * lipa_detection.c
+ * lipa.c
  *
- *  Created on: Oct 3, 2020
+ *  Created on: Oct 5, 2020
  *      Author: Yanweijie
  */
 
@@ -17,5 +17,11 @@ extern struct index_overhead index_overhead;
 extern struct index_buffer index_buffer;
 
 void index_lookup_lipa(struct segment *s) {
-
+    assert(s->features);
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, s->features);
+    while(g_hash_table_iter_next(&iter, &key, &value)) {
+        
+    }
 }

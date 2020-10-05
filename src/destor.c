@@ -130,6 +130,8 @@ void destor_start() {
 	 */
 	destor.backup_retention_time = -1;
 
+	destor.champion_choose_method = CHAMPIOM_CHOOSE_GREEDY;
+
 	load_config();
 
 	sds stat_file = sdsdup(destor.working_directory);
