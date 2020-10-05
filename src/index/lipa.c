@@ -33,7 +33,6 @@ void index_lookup_lipa(struct segment *s) {
         if (context_find((fingerprint *) key)) {
             contextList = context_lookup((fingerprint *) key);
             int list_length = g_list_length(contextList);
-            NOTICE("The length of list is %d ", list_length);
             if (list_length >= CONTEXT_TABLE_LENGTH) {
                 struct contextItem *item = NULL;
                 if(destor.lipa_update_method == LIPA_MIN){
@@ -42,14 +41,14 @@ void index_lookup_lipa(struct segment *s) {
                     item = contextList -> data;     
                 }
                 contextList = g_list_remove(contextList, item);
-                free_contextItem(minItem);
+                free_contextItem(item);
             }
         }
         contextList = g_list_append(contextList, newItem);
-        g_hash_table_replace(ctxtTable, (fingerprint *) key, ctxtList);
+        context_update((fingerprint *) key, contextList);
         champion = champion_choose(contextList);
 
         //prefetch champion and followers fingerprint into cache
-        fp_prefetch(ctxtList, champion, (char*) key);
+        fp_prefetch(contextList, champion, (char*) key);
     }
 }

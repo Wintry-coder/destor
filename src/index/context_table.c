@@ -30,8 +30,8 @@ int context_table_find(char* key) {
 	return hit ? 1 : 0;
 }
 
-void context_table_update(char* key, int64_t id) {
-
+void context_table_update(char* key, GList* contextList) {
+	g_hash_table_replace(context_table, key, contextList);
 }
 
 void context_table_delete(char* key, int64_t id){
