@@ -83,7 +83,8 @@ void destor_start() {
     destor.trace_format = TRACE_DESTOR;
 	destor.verbosity = DESTOR_WARNING;
 
-	destor.chunk_algorithm = CHUNK_RABIN;
+	//destor.chunk_algorithm = CHUNK_RABIN;
+	destor.chunk_algorithm = CHUNK_TTTD;
 	destor.chunk_max_size = 65536;
 	destor.chunk_min_size = 1024;
 	destor.chunk_avg_size = 8192;

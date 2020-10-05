@@ -92,6 +92,16 @@ void init_index() {
                 destor.index_segment_prefech : 16;
                 break;
             }
+            case INDEX_SPECIFIC_LIPA:{
+                destor.index_category[0] = INDEX_CATEGORY_NEAR_EXACT;
+                destor.index_category[1] = INDEX_CATEGORY_LOGICAL_LOCALITY;
+                destor.index_segment_algorithm[0] = INDEX_SEGMENT_CONTENT_DEFINED;
+                destor.index_segment_selection_method[0] = INDEX_SEGMENT_SELECT_TOP;        
+                destor.index_sampling_method[0] = INDEX_SAMPLING_UNIFORM;
+                destor.index_sampling_method[1] = destor.index_sampling_method[1] > 1 ?
+                destor.index_sampling_method[1] : 256;
+                break;        
+            }
             default:{
                 WARNING("Invalid index specific!");
                 exit(1);
