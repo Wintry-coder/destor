@@ -196,6 +196,8 @@
 #define CHAMPIOM_CHOOSE_GREEDY 2
 #define CHAMPIOM_CHOOSE_RECENT 3
 
+#define LIPA_FIFO 1
+#define LIPA_MIN 2
 
 struct destor {
 	sds working_directory;
@@ -287,6 +289,7 @@ struct destor {
 
 	/* The context table */
 	int champion_choose_method;
+	int lipa_update_method;
 
 } destor;
 

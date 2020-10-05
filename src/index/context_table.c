@@ -11,7 +11,7 @@ static GHashTable *context_table;
 
 void (*close_context)();
 GList* (*context_lookup)(char *key);
-bool (*context_find)(char *key);
+int (*context_find)(char *key);
 void (*context_update)(char *key, int64_t id);
 void (*context_delete)(char* key, int64_t id);
 
@@ -25,7 +25,7 @@ GList* context_table_lookup(char* key) {
 	return contextList;
 }
 
-bool context_table_find(char* key) {
+int context_table_find(char* key) {
 	gboolean hit = g_hash_table_contains(context_table, key);
 	return hit ? 1 : 0;
 }

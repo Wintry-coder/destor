@@ -131,6 +131,7 @@ void destor_start() {
 	destor.backup_retention_time = -1;
 
 	destor.champion_choose_method = CHAMPIOM_CHOOSE_GREEDY;
+	destor.lipa_update_method = LIPA_MIN;
 
 	load_config();
 

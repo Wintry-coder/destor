@@ -17,6 +17,8 @@ extern struct index_overhead index_overhead;
 
 extern struct index_buffer index_buffer;
 
+extern struct contextItem *(*champion_choose)(GList *contextList);
+
 void index_lookup_lipa(struct segment *s) {
     assert(s->features);
     GHashTableIter iter;
@@ -28,11 +30,26 @@ void index_lookup_lipa(struct segment *s) {
 
     while(g_hash_table_iter_next(&iter, &key, &value)) {
         GList* contextList = NULL;
-        if (g_hash_table_contains(, (fingerprint *) key)) {
-            hit++;
-            // this feature exist a ctxtTable List;
-            ctxtList = g_hash_table_lookup(ctxtTable, (fingerprint *) key);
-
+        if (context_find((fingerprint *) key)) {
+            contextList = context_lookup((fingerprint *) key);
+            int list_length = g_list_length(contextList);
+            NOTICE("The length of list is %d ", list_length);
+            if (list_length >= CONTEXT_TABLE_LENGTH) {
+                struct contextItem *item = NULL;
+                if(destor.lipa_update_method == LIPA_MIN){
+                    item = find_item(contextList, 1);
+                }else{
+                    item = contextList -> data;     
+                }
+                contextList = g_list_remove(contextList, item);
+                free_contextItem(minItem);
+            }
         }
+        contextList = g_list_append(contextList, newItem);
+        g_hash_table_replace(ctxtTable, (fingerprint *) key, ctxtList);
+        champion = champion_choose(contextList);
+
+        //prefetch champion and followers fingerprint into cache
+        fp_prefetch(ctxtList, champion, (char*) key);
     }
 }
