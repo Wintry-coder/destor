@@ -232,6 +232,7 @@ static void index_lookup_base(struct segment *s){
 }
 
 extern void index_lookup_similarity_detection(struct segment *s);
+extern void index_lookup_lipa(struct segment *s);
 
 extern struct {
     /* g_mutex_init() is unnecessary if in static storage. */
@@ -262,7 +263,11 @@ int index_lookup(struct segment* s) {
             && destor.index_segment_selection_method[0] != INDEX_SEGMENT_SELECT_BASE){
         /* Similarity-based */
         s->features = sampling(s->chunks, s->chunk_num);
-        index_lookup_similarity_detection(s);
+        if(destor.index_specific == INDEX_SPECIFIC_LIPA){
+            index_lookup_lipa(s);
+        }else{
+            index_lookup_similarity_detection(s);
+        }
     }else{
         /* Base */
         index_lookup_base(s);
