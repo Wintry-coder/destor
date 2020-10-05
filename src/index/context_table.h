@@ -27,5 +27,5 @@ extern void (*close_context)();
 extern GList* (*context_lookup)(char *key);
 extern int (*context_find)(char *key);
 extern void (*context_update)(char *key, int64_t id);
-extern void (*context_delete)(char* key, int64_t id);
+
 #endif 

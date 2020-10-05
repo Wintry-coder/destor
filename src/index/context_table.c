@@ -13,7 +13,6 @@ void (*close_context)();
 GList* (*context_lookup)(char *key);
 int (*context_find)(char *key);
 void (*context_update)(char *key, int64_t id);
-void (*context_delete)(char* key, int64_t id);
 
 
 void close_context_table() {
@@ -32,10 +31,6 @@ int context_table_find(char* key) {
 
 void context_table_update(char* key, GList* contextList) {
 	g_hash_table_replace(context_table, key, contextList);
-}
-
-void context_table_delete(char* key, int64_t id){
-
 }
 
 
@@ -74,7 +69,6 @@ void init_context_table() {
     context_lookup = context_table_lookup;
     context_find = context_table_find;
     context_update = context_table_update;
-    context_delete = context_table_delete;
 	
     VERBOSE("initial context table");
 }
