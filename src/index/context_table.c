@@ -33,7 +33,11 @@ void context_table_update(char* key, GList* contextList) {
 	g_hash_table_replace(context_table, key, contextList);
 }
 
-
+/*
+ * contextList: the list in context table
+ * minitem: if true, find the min item; otherwise, find the max item;
+ * return the max/min item
+ */
 
 struct contextItem *find_item(GList *contextList, bool minitem) {
     struct contextItem* item = contextList -> data;
@@ -60,6 +64,7 @@ struct contextItem *find_item(GList *contextList, bool minitem) {
 
 /*
  * Mapping a feature to the context list.
+ * The length of context list is fixed
  * Each item in the context list include segment id, score and followers
  */
 void init_context_table() {
@@ -73,6 +78,9 @@ void init_context_table() {
     VERBOSE("initial context table");
 }
 
+/*
+ * New a elem in the context List
+ */
 struct contextItem* new_contextItem(struct segment* segment){
     assert(segment);
 	struct contextItem* newItem = (struct contextItem*) malloc(sizeof(struct contextItem));

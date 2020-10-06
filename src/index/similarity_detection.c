@@ -184,6 +184,10 @@ void index_lookup_similarity_detection(struct segment *s){
 					index_overhead.lookup_requests++;
 					/* prefetch the target unit */
 					fingerprint_cache_prefetch(ids[0]);
+					/* 
+ 					 * IDs in value are in FIFO order.
+ 					 * ids[0] keeps the latest ID.
+					 */
 					int64_t id = fingerprint_cache_lookup(&c->fp);
 					if(id != TEMPORARY_ID){
 						/*

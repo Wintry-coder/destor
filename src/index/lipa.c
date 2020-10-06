@@ -19,6 +19,13 @@ extern struct index_buffer index_buffer;
 
 extern struct contextItem *(*champion_choose)(GList *contextList);
 
+/**
+ * Input: segment s
+ * Segment s corresponds to several features.
+ * Key: each feature in s. 
+ * Each feature is mapped to several segment IDs.
+ * 
+ */
 void index_lookup_lipa(struct segment *s) {
     assert(s->features);
     GHashTableIter iter;
@@ -37,8 +44,10 @@ void index_lookup_lipa(struct segment *s) {
                 struct contextItem *item = NULL;
                 if(destor.lipa_update_method == LIPA_MIN){
                     item = find_item(contextList, 1);
+					//remove  the lowest score  entry  in  the segment list
                 }else{
-                    item = contextList -> data;     
+                    item = contextList -> data;  
+					//remove  the oldest entry  in  the segment list   
                 }
                 contextList = g_list_remove(contextList, item);
                 free_contextItem(item);
@@ -51,7 +60,9 @@ void index_lookup_lipa(struct segment *s) {
         //prefetch champion and followers fingerprint into cache
         fingerprint_lipa_prefetch(contextList, champion, (char*) key);
     }
-    
+    /**
+	 * The following part is same as the part of similar detection
+	 */
     GSequenceIter *iter = g_sequence_get_begin_iter(s->chunks);
 	GSequenceIter *end = g_sequence_get_end_iter(s->chunks);
 	for (; iter != end; iter = g_sequence_iter_next(iter)) {
