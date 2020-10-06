@@ -80,8 +80,12 @@ void* lru_cache_hits(struct lruCache* c, void* user_data,
 	}
 	if (elem) {
 		c->elem_queue = g_list_remove_link(c->elem_queue, elem);
-		c->elem_queue = g_list_concat(elem, c->elem_queue);
+		c->elem_queue = g_list_concat(elem, c->elem_queue); 
 		return elem->data;
+		/*
+		 * if elem exists,  move it to the top of the list
+		 * namely, LRU
+		 */
 	} else {
 		return NULL;
 	}
