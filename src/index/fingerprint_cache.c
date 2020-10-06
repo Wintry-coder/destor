@@ -110,18 +110,25 @@ void fingerprint_cache_prefetch(int64_t id){
 
 void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature) {
     assert(champion);
-    GList *iter = g_list_find(ctxtList, champion);
+	int followers = champion ->followers;
 
-    int iter_time = champion->followers;
-    int counter;
+    GList *iter = g_list_find(contextList, champion);
+
     int64_t* ids = kvstore_lookup(feature);
     segmentid id = (ids) ? ids[0] : -1;
     GQueue* segmentRecipes = prefetch_segments(id, 1);
+
     struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
 
-    for (counter = 0; counter <= iter_time && iter != NULL; iter = g_list_next(iter), counter++) {
+    for (i = 0; i <= followers && iter != NULL; iter = g_list_next(iter), i++) {
         //LIPA_fingerprint_cache_prefetch(champion->id, feature);
-        LIPA_fingerprint_cache_prefetch(iter->data, feature, sr);
+		struct contextItem* item = iter->data;
+		if (!lru_cache_hits(lru_queue, item->id, lipa_cache_check_id)) {
+        	index_overhead.read_prefetching_units++;
+        	struct LIPA_cacheItem* cacheItem = new_lipa_cache_item(item, sr);
+        	assert(cacheItem);
+        	lru_cache_insert(lru_queue, cacheItem, feedback, NULL);
+    	}
     }
     if (sr != NULL)
         free_segment_recipe(sr);
