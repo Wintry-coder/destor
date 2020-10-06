@@ -110,4 +110,6 @@ int lookup_fingerprint_in_segment_recipe(struct segmentRecipe* sr,
 
 struct segmentRecipe* read_next_segment(struct backupVersion *bv);
 
+GQueue* prefetch_lipa_segments(segmentid id, int prefetch_num) 
+
 #endif /* RECIPESTORE_H_ */
