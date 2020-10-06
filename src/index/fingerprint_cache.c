@@ -9,6 +9,7 @@
 #include "../storage/containerstore.h"
 #include "../recipe/recipestore.h"
 #include "../utils/lru_cache.h"
+#include "context_table.h"
 
 static struct lruCache* lru_queue;
 
@@ -76,6 +77,41 @@ void fingerprint_cache_prefetch(int64_t id){
 			}
 			break;
 		}
+		case INDEX_CATEGORY_LOGICAL_LOCALITY:{
+			if (!lru_cache_hits(lru_queue, &id,
+					segment_recipe_check_id)){
+				/*
+				 * If the segment we need is already in cache,
+				 * we do not need to read it.
+				 */
+				GQueue* segments = prefetch_segments(id,
+						destor.index_segment_prefech);
+				index_overhead.read_prefetching_units++;
+				VERBOSE("Dedup phase: prefetch %d segments into %d cache",
+						g_queue_get_length(segments),
+						destor.index_cache_size);
+				struct segmentRecipe* sr;
+				while ((sr = g_queue_pop_tail(segments))) {
+					/* From tail to head */
+					if (!lru_cache_hits(lru_queue, &sr->id,
+							segment_recipe_check_id)) {
+						lru_cache_insert(lru_queue, sr, NULL, NULL);
+					} else {
+						/* Already in cache */
+						free_segment_recipe(sr);
+					}
+				}
+				g_queue_free(segments);
+			}
+			break;
+		}
+	}
+}
+
+void fingerprint_lipa_prefetch(GList* contextList, struct contextItem* champion, char* feature){
+	int follwers = champion ->followers;
+	int id = champion ->id;
+	switch(destor.index_category[1]){
 		case INDEX_CATEGORY_LOGICAL_LOCALITY:{
 			if (!lru_cache_hits(lru_queue, &id,
 					segment_recipe_check_id)){

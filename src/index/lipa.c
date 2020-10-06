@@ -49,7 +49,7 @@ void index_lookup_lipa(struct segment *s) {
         champion = champion_choose(contextList);
 
         //prefetch champion and followers fingerprint into cache
-        fp_prefetch(contextList, champion, (char*) key);
+        fingerprint_lipa_prefetch(contextList, champion, (char*) key);
     }
     
     GSequenceIter *iter = g_sequence_get_begin_iter(s->chunks);

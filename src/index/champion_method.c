@@ -4,6 +4,10 @@
 #define EPSILON 0.1
 struct contextItem *(*champion_choose)(GList *contextList);
 
+/*
+ * policy: random
+ * choose a segment randomly
+ */
 static struct contextItem* champion_choose_random(GList* contextList) {
     srand(time(NULL));
     int contextList_length = g_list_length(contextList);
@@ -11,6 +15,11 @@ static struct contextItem* champion_choose_random(GList* contextList) {
     return g_list_nth_data(contextList, index);
 }
 
+/*
+ * policy: greedy
+ * it may choose a segment with the  highest score with 1 − e probability
+ * otherwise, it may choose a random segment with e probability
+ */
 static struct contextItem* champion_choose_greedy(GList* contextList) {
     srand(time(NULL));
     double randnum = rand()/(RAND_MAX+1.0);
@@ -21,6 +30,10 @@ static struct contextItem* champion_choose_greedy(GList* contextList) {
     }
 }
 
+/*
+ * policy: recent
+ * choose the newest segment as champion
+ */
 static struct contextItem* champion_choose_recent(GList* contextList) {
     GList* recentitem = g_list_last(contextList);
     return recentitem -> data;
