@@ -87,6 +87,7 @@ struct contextItem* new_contextItem(struct segment* segment){
 	newItem ->followers = 4;
 	newItem ->score = 0;
     newItem ->id = segment ->id;
+    newItem ->updatetime = 0;
 	return newItem;
 }
 

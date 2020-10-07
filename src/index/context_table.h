@@ -13,6 +13,7 @@ struct contextItem {
 	segmentid id;;
 	int followers;
 	double score;
+	int updatetime;
 };
 #define CONTEXT_TABLE_LENGTH 4
 
