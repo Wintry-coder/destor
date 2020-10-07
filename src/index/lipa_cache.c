@@ -23,7 +23,7 @@ void feedback(struct segmentRecipe* sr, char* feature) {
 		    contextList = g_list_next(contextList);
 	    }  
         elem ->updatetime++;
-        elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->update_time);
+        elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
     }   
 
 }
