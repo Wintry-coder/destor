@@ -10,6 +10,7 @@
 #include "../recipe/recipestore.h"
 #include "../utils/lru_cache.h"
 #include "context_table.h"
+#include "lipa_cache.h"
 
 static struct lruCache* lru_queue;
 
@@ -126,7 +127,7 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 	/* From tail to head */
 		if (!lru_cache_hits(lru_queue, &sr->id,
 			segment_recipe_check_id)) {
-			lru_cache_insert(lru_queue, sr, feedback, NULL);
+			lru_cache_insert(lru_queue, sr, feedback, feature);
 		} else {
 			/* Already in cache */
 			free_segment_recipe(sr);
