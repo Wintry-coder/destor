@@ -501,6 +501,7 @@ struct segmentRecipe* new_segment_recipe() {
 	sr->id = TEMPORARY_ID;
 	sr->kvpairs = g_hash_table_new_full(g_int64_hash, g_fingerprint_equal,
 			NULL, free);
+	sr->hit = 0;
 	return sr;
 }
 

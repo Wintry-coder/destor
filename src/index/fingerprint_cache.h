@@ -11,5 +11,6 @@
 void init_fingerprint_cache();
 int64_t fingerprint_cache_lookup(fingerprint *fp);
 void fingerprint_cache_prefetch(int64_t id);
+void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature);
 
 #endif /* FINGERPRINT_CACHE_H_ */
