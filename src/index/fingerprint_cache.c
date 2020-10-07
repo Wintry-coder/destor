@@ -31,6 +31,11 @@ void init_fingerprint_cache(){
 				free_container_meta, lookup_fingerprint_in_container_meta);
 		break;
 	case INDEX_CATEGORY_LOGICAL_LOCALITY:
+	    if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
+	    	lru_queue = new_lru_cache(destor.index_cache_size,
+	    			free_lipa_cache, lookup_fingerprint_in_lipa_cache);
+			break;
+		}
 		lru_queue = new_lru_cache(destor.index_cache_size,
 				free_segment_recipe, lookup_fingerprint_in_segment_recipe);
 		break;
@@ -112,10 +117,9 @@ void fingerprint_cache_prefetch(int64_t id){
 void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature) {
     assert(champion);
 	int prefetchnum = champion ->followers + 1;
-
-    GList *iter = g_list_find(contextList, champion);
     segmentid id = champion ->id;
     GQueue* segmentRecipes = prefetch_segments(id, prefetchnum);
+
     struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
 	index_overhead.read_prefetching_units++;
 	VERBOSE("Dedup phase: prefetch %d segments into %d lipa cache",
@@ -127,6 +131,7 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 	/* From tail to head */
 		if (!lru_cache_hits(lru_queue, &sr->id,
 			segment_recipe_check_id)) {
+			struct lipaCache* cacheItem = new_lipa_cache(sr);
 			lru_cache_insert(lru_queue, sr, feedback, feature);
 		} else {
 			/* Already in cache */
