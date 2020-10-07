@@ -133,6 +133,9 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			/* Already in cache */
 			free_segment_recipe(sr);
 		}
+		prefetchnum--;
+		if(prefetchnum == 0)
+		sr->flag = 1;
 	}
 	g_queue_free(segments);
 }

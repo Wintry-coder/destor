@@ -69,6 +69,7 @@ struct segmentRecipe {
 	GHashTable *kvpairs;
 
 	int hit;
+	int flag;
 };
 
 /*
