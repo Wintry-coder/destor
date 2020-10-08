@@ -503,6 +503,7 @@ struct segmentRecipe* new_segment_recipe() {
 			NULL, free);
 	sr->hit = 0;
 	sr->flag = 0;
+	sr->champion_id =  TEMPORARY_ID;
 	return sr;
 }
 

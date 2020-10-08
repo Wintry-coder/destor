@@ -124,6 +124,7 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			destor.index_cache_size);	
 			
 	struct segmentRecipe* sr;
+	int i = 0;
 	while ((sr = g_queue_pop_tail(segments))) {
 	/* From tail to head */
 		if (!lru_cache_hits(lru_queue, &sr->id,
@@ -133,9 +134,12 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			/* Already in cache */
 			free_segment_recipe(sr);
 		}
-		prefetchnum--;
-		if(prefetchnum == 0)
-		sr->flag = 1;
+		sr->champion_id = id;
+		if(i == 0)
+		{
+			sr->flag = 1;
+		}
+		i++;
 	}
 	g_queue_free(segments);
 }
