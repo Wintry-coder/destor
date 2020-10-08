@@ -106,6 +106,8 @@ void free_file_recipe_meta(struct fileRecipeMeta* r);
 int segment_recipe_check_id(struct segmentRecipe* sr, segmentid *id);
 struct segmentRecipe* new_segment_recipe();
 void free_segment_recipe(struct segmentRecipe* sr);
+void segment_recipe_foreach(struct segmentRecipe* sr, void (*func)(fingerprint*, void*), void* data);
+
 segmentid append_segment_flag(struct backupVersion* b, int flag, int segment_size);
 GQueue* prefetch_segments(segmentid id, int prefetch_num);
 int lookup_fingerprint_in_segment_recipe(struct segmentRecipe* sr,
