@@ -132,6 +132,7 @@ void destor_start() {
 
 	destor.champion_choose_method = CHAMPIOM_CHOOSE_GREEDY;
 	destor.lipa_update_method = LIPA_MIN;
+	destor.prefetch_method = PREFETCH_TRIAL;
 
 	load_config();
 

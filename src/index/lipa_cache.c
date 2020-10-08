@@ -24,16 +24,15 @@ void feedback(struct segmentRecipe* sr, char* feature) {
 	    }  
         elem ->updatetime++;
         elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
-
-
     }   
-    if(sr->flag == 1)
-    {
-    /*
-     * The last segment  feedbacks its champion
-     */
-        segmentid champion_id = sr->champion_id;
+    if(destor.prefetch_method == PREFETCH_ADAPTIVE){
+        if(sr->flag == 1)
+        {
+            /*
+             * The last segment  feedbacks its champion
+             */
+            segmentid champion_id = sr->champion_id;
 
-    }    
-
+        }
+    }
 }
