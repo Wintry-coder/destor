@@ -20,8 +20,8 @@ void close_context_table() {
 }
 
 GList* context_table_lookup(char* key) {
-	GList* contextList = g_hash_table_lookup(context_table, key);
-	return contextList;
+    struct contextTableList * ctList = g_hash_table_lookup(context_table, key);
+	return ctList->contextList;
 }
 
 int context_table_find(char* key) {
@@ -30,6 +30,13 @@ int context_table_find(char* key) {
 }
 
 void context_table_update(char* key, GList* contextList) {
+    struct contextTableList * ctList = new_contextTableList(contextList);
+
+    if(g_hash_table_contains(context_table, key))
+    {
+        ctList->meanhit = contextList;
+    }
+    struct contextTableList * ctList = g_hash_table_lookup(context_table, key);
 	g_hash_table_replace(context_table, key, contextList);
 }
 
@@ -89,6 +96,16 @@ struct contextItem* new_contextItem(struct segment* segment){
     newItem->id = segment ->id;
     newItem->updatetime = 0;
 	return newItem;
+}
+
+
+struct contextTableList* new_contextTableList(GList *contextList)
+{
+    assert(contextList);
+    struct contextTableList* ctList = (struct contextTableList*) malloc(sizeof(struct contextTableList));
+    ctList->meanhit = ctList->deviation = 0;
+    ctList->contextList = contextList;
+    return ctList;
 }
 
 void free_contextItem(struct contextItem* item) {
