@@ -32,6 +32,10 @@ void feedback(struct segmentRecipe* sr, char* feature) {
              * The last segment  feedbacks its champion
              */
             segmentid champion_id = sr->champion_id;
+            if(sr->hit < threshold)
+            {
+                
+            }
 
         }
     }

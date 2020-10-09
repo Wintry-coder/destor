@@ -70,7 +70,7 @@ struct segmentRecipe {
 
 	int hit;
 	int flag;
-	segmentid champion_id;
+	struct contextItem *champion;
 };
 
 /*
