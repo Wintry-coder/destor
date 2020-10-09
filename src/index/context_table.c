@@ -84,10 +84,10 @@ void init_context_table() {
 struct contextItem* new_contextItem(struct segment* segment){
     assert(segment);
 	struct contextItem* newItem = (struct contextItem*) malloc(sizeof(struct contextItem));
-	newItem ->followers = 4;
-	newItem ->score = 0;
-    newItem ->id = segment ->id;
-    newItem ->updatetime = 0;
+	newItem->followers = 4;
+	newItem->score = 0;
+    newItem->id = segment ->id;
+    newItem->updatetime = 0;
 	return newItem;
 }
 

@@ -11,7 +11,7 @@ void feedback(struct segmentRecipe* sr, char* feature) {
 
     GList* contextList = NULL;
     if (context_find((fingerprint *) feature)) {
-    // if the feature doesn't exist in context table, don't feedback
+    // if the feature exists in context table, update score
         contextList = context_lookup((fingerprint *) feature);
         segmentid id = sr ->id;
         struct contextItem* elem = contextList -> data;
@@ -26,16 +26,23 @@ void feedback(struct segmentRecipe* sr, char* feature) {
         elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
     }   
     if(destor.prefetch_method == PREFETCH_ADAPTIVE){
-        if(sr->flag == 1)
+        if(sr->flag == 1)//the segment is the last one
         {
             /*
              * The last segment  feedbacks its champion
              */
-            segmentid champion_id = sr->champion_id;
-            if(sr->hit < threshold)
+            struct contextItem* champion = sr -> champion;
+            if(sr->hit < champion->threshold)
             {
-                
+                champion->followers--;
             }
+            else
+            {
+                champion->followers++;
+            }
+        }
+        if(sr->flag == 0)//update the threshold
+        {
 
         }
     }

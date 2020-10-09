@@ -114,7 +114,6 @@ void fingerprint_cache_prefetch(int64_t id){
 void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature) {
     assert(champion);
 	int prefetchnum = champion ->followers + 1;
-    segmentid id = champion ->id;
     GQueue* segmentRecipes = prefetch_segments(id, prefetchnum);
 
     struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
@@ -134,11 +133,11 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			/* Already in cache */
 			free_segment_recipe(sr);
 		}
-		sr->champion_id = id;
+		sr->champion = champion;
 		if(i == 0)
-		{
 			sr->flag = 1;
-		}
+		else
+			sr->flag = 0;
 		i++;
 	}
 	g_queue_free(segments);

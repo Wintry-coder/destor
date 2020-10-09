@@ -15,6 +15,12 @@ struct contextItem {
 	double score;
 	int updatetime;
 };
+
+struct contexttableList{
+	double meanhit;  //the mean hits of the champion and the followers
+	double deviation;
+	GList* contextList;
+};
 #define CONTEXT_TABLE_LENGTH 4
 
 void init_context_table();
