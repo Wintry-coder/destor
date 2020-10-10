@@ -135,7 +135,7 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 		}
 		sr->champion = champion;
 		if(i == 0)
-			sr->flag = 1;
+			sr->flag = 1;//the last one
 		else
 			sr->flag = 0;
 		i++;

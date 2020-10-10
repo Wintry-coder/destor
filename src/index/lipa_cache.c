@@ -26,24 +26,25 @@ void feedback(struct segmentRecipe* sr, char* feature) {
         elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
     }   
     if(destor.prefetch_method == PREFETCH_ADAPTIVE){
+        struct contextItem* champion = sr -> champion;
         if(sr->flag == 1)//the segment is the last one
         {
             /*
              * The last segment  feedbacks its champion
              */
-            struct contextItem* champion = sr -> champion;
-            if(sr->hit < champion->threshold)
+            /*int threshold = champion->meanhit - champion->deviation;
+            if(sr->hit < threshold)
             {
                 champion->followers--;
             }
             else
             {
                 champion->followers++;
-            }
+            }*/
         }
         if(sr->flag == 0)//update the threshold
         {
-
+            
         }
     }
 }
