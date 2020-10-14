@@ -9,13 +9,18 @@ AM_INIT_AUTOMAKE([destor], [2.0])
 AC_PROG_CC
 CFLAGS="-g -O2 -Wall"
 
+
 # Checks for libraries.
 AC_CHECK_LIB([pthread], [pthread_create])
-AC_CHECK_LIB([glib], [g_hash_table_new],[found_glib=yes],[found_glib=no])
+# AC_CHECK_LIB([glib-2.0], [g_hash_table_new],[found_glib=yes],[found_glib=no])
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.32], [g_hash_table_new],[found_glib=yes],[found_glib=no])
+AC_SUBST(GLIB_LIBS)
+AC_SUBST(GLIB_CFLAGS) 
     if test "$found_glib" = "no"; then
     AC_MSG_ERROR([*** Working glib library not found ***])
     fi
-AC_CHECK_LIB([glib], [g_thread_init],[thread_safe=no],[thread_safe=yes])
+# AC_CHECK_LIB([glib-2.0], [g_thread_init],[thread_safe=no],[thread_safe=yes])
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.32], [g_thread_init],[thread_safe=no],[thread_safe=yes])    
     if test "$thread_safe" = "no"; then
     AC_MSG_ERROR([*** The version of glib is too low ***])
     fi
@@ -31,10 +36,10 @@ AC_PROG_RANLIB
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h stdint.h stdlib.h string.h sys/socket.h sys/time.h unistd.h])
-AC_CHECK_HEADERS([glib.h],[found_glib_h=yes],[found_glib_h=no])
-    if test "$found_glib_h" = "no"; then
-    AC_MSG_ERROR([*** Working glib.h header not found ***])
-    fi
+#AC_CHECK_HEADERS([glib.h],[found_glib_h=yes],[found_glib_h=no])
+#    if test "$found_glib_h" = "no"; then
+#    AC_MSG_ERROR([*** Working glib.h header not found ***])
+#    fi
 AC_CHECK_HEADERS([openssl/sha.h], [found_sha_h=yes],[found_sha_h=no])
     if test "$found_sha_h" = "no"; then
     AC_MSG_ERROR([*** Working sha.h header not found ***])
