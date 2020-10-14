@@ -64,7 +64,6 @@ void index_lookup_lipa(struct segment *s) {
         contextList = g_list_append(contextList, newItem);
         context_update((fingerprint *) key, contextList);
         champion = champion_choose(contextList);
-
         //prefetch champion and followers fingerprint into cache
         fingerprint_lipa_prefetch(contextList, champion, (char*) key);
     }
