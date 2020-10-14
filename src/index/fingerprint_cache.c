@@ -114,9 +114,9 @@ void fingerprint_cache_prefetch(int64_t id){
 void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature) {
     assert(champion);
 	int prefetchnum = champion ->followers + 1;
-    GQueue* segmentRecipes = prefetch_segments(id, prefetchnum);
+    GQueue* segments = prefetch_segments(champion->id, prefetchnum);
 
-    struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
+    //struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
 	index_overhead.read_prefetching_units++;
 	VERBOSE("Dedup phase: prefetch %d segments into %d lipa cache",
 			g_queue_get_length(segments),

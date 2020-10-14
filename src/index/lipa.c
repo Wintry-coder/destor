@@ -17,6 +17,14 @@ extern struct index_overhead index_overhead;
 
 extern struct index_buffer index_buffer;
 
+extern struct{
+	/* accessed in dedup phase */
+	struct container *container_buffer;
+	/* In order to facilitate sampling in container,
+	 * we keep a queue for chunks in container buffer. */
+	GSequence *chunks;
+} storage_buffer;
+
 extern struct contextItem *(*champion_choose)(GList *contextList);
 
 /**
@@ -63,10 +71,10 @@ void index_lookup_lipa(struct segment *s) {
     /**
 	 * The following part is same as the part of similar detection
 	 */
-    GSequenceIter *iter = g_sequence_get_begin_iter(s->chunks);
+    GSequenceIter *it = g_sequence_get_begin_iter(s->chunks);
 	GSequenceIter *end = g_sequence_get_end_iter(s->chunks);
-	for (; iter != end; iter = g_sequence_iter_next(iter)) {
-		struct chunk* c = g_sequence_get(iter);
+	for (; it != end; it = g_sequence_iter_next(it)) {
+		struct chunk* c = g_sequence_get(it);
 
 		if (CHECK_CHUNK(c, CHUNK_FILE_START) || CHECK_CHUNK(c, CHUNK_FILE_END))
 			continue;

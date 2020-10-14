@@ -17,7 +17,7 @@ void feedback(struct segmentRecipe* sr, char* feature) {
         struct contextItem* elem = contextList -> data;
         
 	    while (contextList) {
-            current = contextList -> data;
+            elem = contextList -> data;
 		    if (elem->id == id)
 			    break;
 		    contextList = g_list_next(contextList);

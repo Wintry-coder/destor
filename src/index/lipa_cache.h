@@ -8,7 +8,7 @@
 #define LIPA_CACHE_H
 #include "../destor.h"
 #include "context_table.h"
-#include "recipestore.h"
+#include "../recipe/recipestore.h"
 void feedback(struct LIPA_cacheItem* cacheItem, char* feature);
 
 #endif

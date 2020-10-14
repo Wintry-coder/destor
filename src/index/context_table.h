@@ -26,7 +26,7 @@ struct contextTableList{
 void init_context_table();
 
 
-struct contextItem *find_item(GList *contextList, bool minitem);
+struct contextItem *find_item(GList *contextList, int minitem);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
 struct contextTableList* new_contextTableList(GList *contextList);

@@ -46,7 +46,7 @@ void context_table_update(char* key, GList* contextList) {
  * return the max/min item
  */
 
-struct contextItem *find_item(GList *contextList, bool minitem) {
+struct contextItem *find_item(GList *contextList, int minitem) {
     struct contextItem* item = contextList -> data;
     struct contextItem* current = item;
 
@@ -55,11 +55,11 @@ struct contextItem *find_item(GList *contextList, bool minitem) {
     while (contextList){
         current = contextList -> data;
         if(minitem){
-            if (item -> score > currItem -> score) {
+            if (item -> score > current -> score) {
                 item = current;
             }
         }else{
-            if (item -> score < currItem -> score) {
+            if (item -> score < current -> score) {
                 item = current;
             }            
         }
