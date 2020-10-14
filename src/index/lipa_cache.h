@@ -9,6 +9,7 @@
 #include "../destor.h"
 #include "context_table.h"
 #include "../recipe/recipestore.h"
-void feedback(struct LIPA_cacheItem* cacheItem, char* feature);
+
+void feedback(struct segmentRecipe* sr, char* feature);
 
 #endif
