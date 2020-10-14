@@ -100,7 +100,7 @@ void init_index() {
                 destor.index_sampling_method[0] = INDEX_SAMPLING_UNIFORM;
                 destor.index_sampling_method[1] = destor.index_sampling_method[1] > 1 ?
                 destor.index_sampling_method[1] : 256;
-
+                //fprintf(stdout, "The index specifix is LIPA!\n");
                 //destor.index_segment_prefech = 1;
                 break;        
             }

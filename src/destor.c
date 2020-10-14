@@ -95,7 +95,7 @@ void destor_start() {
 
 	destor.index_category[0] = INDEX_CATEGORY_NEAR_EXACT;
 	destor.index_category[1] = INDEX_CATEGORY_PHYSICAL_LOCALITY;
-	destor.index_specific = INDEX_SPECIFIC_NO;
+	destor.index_specific = INDEX_SPECIFIC_LIPA;
 	destor.index_key_value_store = INDEX_KEY_VALUE_HTABLE;
 	destor.index_key_size = 20;
     destor.index_value_length = 1;
