@@ -9,7 +9,7 @@
 #include "../destor.h"
 #include "context_table.h"
 #include "../recipe/recipestore.h"
-
+int ItemId;
 void feedback(struct segmentRecipe* sr, char* feature);
 
 #endif

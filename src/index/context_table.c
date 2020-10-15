@@ -93,7 +93,7 @@ struct contextItem* new_contextItem(struct segment* segment){
 	struct contextItem* newItem = (struct contextItem*) malloc(sizeof(struct contextItem));
 	newItem->followers = 4;
 	newItem->score = 0;
-    newItem->id = segment ->id;
+    newItem->id = ItemId++;;
     newItem->updatetime = 0;
 
     struct segment* newSeg = new_segment_full();
