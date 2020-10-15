@@ -60,6 +60,11 @@ static void top_segment_select(GHashTable* features) {
 	while (g_hash_table_iter_next(&iter, &key, &value)) {
 		/* Each feature is mapped to several segment IDs. */
 		segmentid *ids = kvstore_lookup((fingerprint*) key);
+		/* We lookup segment IDs in kv by the features of s
+		 * Each feature can get several segment IDs.
+		 * We create segment s. Its id is what we lookup and its feature is key.
+		 * Similar_segments: key is id, value is s
+		 */
 		if (ids) {
 			index_overhead.lookup_requests++;
 			int i;

@@ -42,7 +42,10 @@ void index_lookup_lipa(struct segment *s) {
 
     struct contextItem* newItem = new_contextItem(s);
     struct contextItem* champion;
-
+	/* Each feature will map many segments 
+	 * key is feature	
+	 * value is ids
+	 */
     while(g_hash_table_iter_next(&iter, &key, &value)) {
         GList* contextList = NULL;
         if (context_find((fingerprint *) key)) {

@@ -76,6 +76,9 @@ void *dedup_thread(void *arg) {
 
 		/* Add the chunk to the segment. */
 		s = segmenting(c);
+		/* Now the id of s is TEMPORARY_ID
+		 * Features of s is NULL;
+		 */
 		if (!s)
 			continue;
 		/* segmenting success */
