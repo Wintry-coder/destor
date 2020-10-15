@@ -95,9 +95,36 @@ struct contextItem* new_contextItem(struct segment* segment){
 	newItem->score = 0;
     newItem->id = segment ->id;
     newItem->updatetime = 0;
+
+    struct segment* newSeg = new_segment_full();
+	newSeg = copy_segment(segment, newSeg);
+	newItem->segment_ptr = newSeg;
+
 	return newItem;
 }
 
+struct segment* copy_segment(struct segment* src, struct segment* dst) {
+    dst ->chunk_num = src->chunk_num;
+   	dst->id = src->id;
+   	GSequenceIter* src_begin = g_sequence_get_begin_iter(src->chunks);
+   	GSequenceIter* src_end = g_sequence_get_end_iter(src->chunks);
+
+   	for (; src_begin != src_end; src_begin = g_sequence_iter_next(src_begin)) {
+   	    g_sequence_append(dst->chunks, g_sequence_get(src_begin));
+   	}
+   	GHashTableIter iter;
+   	gpointer key, val;
+	assert(src->features);
+   	g_hash_table_iter_init(&iter, src->features);
+
+   	while (g_hash_table_iter_next(&iter, &key, &val)) {
+   	    char* feature = malloc(destor.index_key_size);
+   	    memcpy(feature, (char*)key, destor.index_key_size);
+   		g_hash_table_insert(dst->features, feature, val);
+   	}
+
+   	return dst;
+}
 
 struct contextTableList* new_contextTableList(GList *contextList)
 {

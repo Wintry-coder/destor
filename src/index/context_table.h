@@ -10,7 +10,8 @@
 #include "index.h"
 
 struct contextItem {
-	segmentid id;;
+	int64_t id;
+	struct segment* segment_ptr;
 	int followers;
 	double score;
 	int updatetime;
@@ -30,6 +31,7 @@ struct contextItem *find_item(GList *contextList, int minitem);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
 struct contextTableList* new_contextTableList(GList *contextList);
+struct segment* copy_segment(struct segment* src, struct segment* dst);
 
 extern void (*close_context)();
 extern GList* (*context_lookup)(char *key);
