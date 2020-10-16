@@ -33,6 +33,8 @@ void index_delete(fingerprint *fp, int64_t id);
 void index_check_buffer(struct segment *s);
 int index_update_buffer(struct segment *s);
 
+void LIPA_cache_update_index(struct segment* s);
+
 //void index_delete(fingerprint *);
 
 extern GHashTable* (*sampling)(GSequence *chunks, int32_t chunk_num);

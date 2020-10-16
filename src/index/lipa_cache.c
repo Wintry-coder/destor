@@ -99,3 +99,4 @@ void free_lipa_cache(struct LIPA_cacheItem* cache) {
 int lookup_fingerprint_in_lipa_cache(struct LIPA_cacheItem* cacheItem, fingerprint* fp) {
     return g_hash_table_contains(cacheItem->kvpairs, fp);
 }
+
