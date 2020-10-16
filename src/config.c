@@ -149,6 +149,8 @@ void load_config_from_string(sds config) {
 					assert(destor.index_category[0] == INDEX_CATEGORY_NEAR_EXACT 
                             && destor.index_category[1] == INDEX_CATEGORY_LOGICAL_LOCALITY);
 					destor.index_specific = INDEX_SPECIFIC_SILO;
+				} else if (strcasecmp(argv[3], "LIPA") == 0) {
+					destor.index_specific = INDEX_SPECIFIC_LIPA;
 				} else {
 					err = "Invalid index specific";
 					goto loaderr;

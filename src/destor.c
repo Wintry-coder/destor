@@ -403,6 +403,7 @@ struct segment* new_segment_full(){
 }
 
 void free_segment(struct segment* s) {
+	assert(s);
 	GSequenceIter *begin = g_sequence_get_begin_iter(s->chunks);
 	GSequenceIter *end = g_sequence_get_end_iter(s->chunks);
 	for(; begin != end; begin = g_sequence_get_begin_iter(s->chunks)){

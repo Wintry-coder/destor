@@ -13,7 +13,7 @@ void (*close_context)();
 GList* (*context_lookup)(char *key);
 int (*context_find)(char *key);
 void (*context_update)(char *key, int64_t id);
-
+ItemId;
 
 void close_context_table() {
 
@@ -137,5 +137,7 @@ struct contextTableList* new_contextTableList(GList *contextList)
 
 void free_contextItem(struct contextItem* item) {
 	printf("free context table item\n");
+    free_segment(item->segment_ptr);
+	item->segment_ptr = NULL;
     free(item);
 }
