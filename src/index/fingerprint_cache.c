@@ -54,6 +54,19 @@ int64_t fingerprint_cache_lookup(fingerprint *fp){
 			break;
 		}
 		case INDEX_CATEGORY_LOGICAL_LOCALITY:{
+			if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
+                struct LIPA_cacheItem* cacheItem = lru_cache_lookup(lru_queue, fp);
+                if (cacheItem) {
+                    //update cache item hit
+                    int64_t id = g_hash_table_lookup(cacheItem->kvpairs, fp);
+                    if (id > TEMPORARY_ID) {
+                        cacheItem->hit_score++;
+                    }
+                    return id;
+                }
+				break;
+			}
+
 
 			struct segmentRecipe* sr = lru_cache_lookup(lru_queue, fp);
 			if(sr){
@@ -62,7 +75,6 @@ int64_t fingerprint_cache_lookup(fingerprint *fp){
 					WARNING("expect > TEMPORARY_ID, but being %lld", cp->id);
 					assert(cp->id > TEMPORARY_ID);
 				}
-				sr ->hit++;
 				return cp->id;
 			}
 			break;
