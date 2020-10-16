@@ -7,47 +7,56 @@
 #include "lipa_cache.h"
 
 
-void feedback(struct segmentRecipe* sr, char* feature) {
+// void feedback(struct segmentRecipe* sr, char* feature) {
 
-    GList* contextList = NULL;
-    if (context_find((fingerprint *) feature)) {
-    // if the feature exists in context table, update score
-        contextList = context_lookup((fingerprint *) feature);
-        segmentid id = sr ->id;
-        struct contextItem* elem = contextList -> data;
+//     GList* contextList = NULL;
+//     if (context_find((fingerprint *) feature)) {
+//     // if the feature exists in context table, update score
+//         contextList = context_lookup((fingerprint *) feature);
+//         segmentid id = sr ->id;
+//         struct contextItem* elem = contextList -> data;
         
-	    while (contextList) {
-            elem = contextList -> data;
-		    if (elem->id == id)
-			    break;
-		    contextList = g_list_next(contextList);
-	    }  
-        elem ->updatetime++;
-        elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
-    }   
-    if(destor.prefetch_method == PREFETCH_ADAPTIVE){
-        struct contextItem* champion = sr -> champion;
-        if(sr->flag == 1)//the segment is the last one
-        {
-            /*
-             * The last segment  feedbacks its champion
-             */
-            /*int threshold = champion->meanhit - champion->deviation;
-            if(sr->hit < threshold)
-            {
-                champion->followers--;
-            }
-            else
-            {
-                champion->followers++;
-            }*/
-        }
-        if(sr->flag == 0)//update the threshold
-        {
+// 	    while (contextList) {
+//             elem = contextList -> data;
+// 		    if (elem->id == id)
+// 			    break;
+// 		    contextList = g_list_next(contextList);
+// 	    }  
+//         elem ->updatetime++;
+//         elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
+//     }   
+//     if(destor.prefetch_method == PREFETCH_ADAPTIVE){
+//         struct contextItem* champion = sr -> champion;
+//         if(sr->flag == 1)//the segment is the last one
+//         {
+//             /*
+//              * The last segment  feedbacks its champion
+//              */
+//             /*int threshold = champion->meanhit - champion->deviation;
+//             if(sr->hit < threshold)
+//             {
+//                 champion->followers--;
+//             }
+//             else
+//             {
+//                 champion->followers++;
+//             }*/
+//         }
+//         if(sr->flag == 0)//update the threshold
+//         {
             
-        }
-    }
+//         }
+//     }
+// }
+
+void feedback(struct LIPA_cacheItem* cacheItem, char* feature) {
+    struct ctxtTableItem* target_ctxtTableItem = cacheItem ->tableItemPtr;
+    assert(target_ctxtTableItem);
+    target_ctxtTableItem ->update_time ++;
+    target_ctxtTableItem -> score = target_ctxtTableItem -> score +
+            ((double)(cacheItem->hit_score) - target_ctxtTableItem -> score) * (1.0 / target_ctxtTableItem -> update_time);
 }
+
 int lipa_cache_check_id(struct LIPA_cacheItem* cache, int*id) {
     return cache ->id == *id;
 }
@@ -80,4 +89,13 @@ struct LIPA_cacheItem* new_lipa_cache_item(struct contextItem* ctxtTableItem, st
 
     }
     return new_cacheItem;
+}
+
+void free_lipa_cache(struct LIPA_cacheItem* cache) {
+    g_hash_table_destroy(cache->kvpairs);
+    free(cache);
+}
+
+int lookup_fingerprint_in_lipa_cache(struct LIPA_cacheItem* cacheItem, fingerprint* fp) {
+    return g_hash_table_contains(cacheItem->kvpairs, fp);
 }

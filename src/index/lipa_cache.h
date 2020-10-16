@@ -29,8 +29,9 @@ struct LIPA_cacheItem {
 	int flag;
 };
 
-void feedback(struct segmentRecipe* sr, char* feature);
+void feedback(struct LIPA_cacheItem* cacheItem, char* feature);
 int lipa_cache_check_id(struct LIPA_cacheItem* cache, int*id);
 struct LIPA_cacheItem* new_lipa_cache_item(struct contextItem* ctxtTableItem, struct segmentRecipe* sr);
-
+void free_lipa_cache(struct LIPA_cacheItem* cache);
+int lookup_fingerprint_in_lipa_cache(struct LIPA_cacheItem* cacheItem, fingerprint* fp);
 #endif

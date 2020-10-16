@@ -31,6 +31,11 @@ void init_fingerprint_cache(){
 				free_container_meta, lookup_fingerprint_in_container_meta);
 		break;
 	case INDEX_CATEGORY_LOGICAL_LOCALITY:
+	    if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
+	    	lru_queue = new_lru_cache(destor.index_cache_size,
+	    			free_lipa_cache, lookup_fingerprint_in_lipa_cache);
+			break;
+		}
 		lru_queue = new_lru_cache(destor.index_cache_size,
 				free_segment_recipe, lookup_fingerprint_in_segment_recipe);
 		break;
@@ -135,7 +140,7 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
         			index_overhead.read_prefetching_units++;
         			struct LIPA_cacheItem* cacheItem = new_lipa_cache_item(item, sr);
         			assert(cacheItem);
-        			lru_cache_insert(lru_queue, cacheItem, feedback, NULL);
+        			lru_cache_insert(lru_queue, cacheItem, feedback, feature);
     			}
     		}
 			if (sr != NULL)
