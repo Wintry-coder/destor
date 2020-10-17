@@ -380,18 +380,18 @@ int index_update_buffer(struct segment *s){
     return 1;
 }
 
-void LIPA_cache_update_index(struct segment* s) {
-    GSequenceIter* chunkIter = g_sequence_get_begin_iter(s->chunks);
-    GSequenceIter* end = g_sequence_get_end_iter(s->chunks);
+// void LIPA_cache_update_index(struct segment* s) {
+//     GSequenceIter* chunkIter = g_sequence_get_begin_iter(s->chunks);
+//     GSequenceIter* end = g_sequence_get_end_iter(s->chunks);
 
-    for (; chunkIter != end; chunkIter = g_sequence_iter_next(chunkIter)) {
-        struct chunk* c = g_sequence_get(chunkIter);
+//     for (; chunkIter != end; chunkIter = g_sequence_iter_next(chunkIter)) {
+//         struct chunk* c = g_sequence_get(chunkIter);
 
-        if (CHECK_CHUNK(c, CHUNK_FILE_START) || CHECK_CHUNK(c, CHUNK_FILE_END))
-            continue;
+//         if (CHECK_CHUNK(c, CHUNK_FILE_START) || CHECK_CHUNK(c, CHUNK_FILE_END))
+//             continue;
 
-        // which means chunk has container id
-        assert(c->id >= 0);
-        LIPA_cache_update(&(c->fp), c->id);
-    }
-}
+//         // which means chunk has container id
+//         assert(c->id >= 0);
+//         LIPA_cache_update(&(c->fp), c->id);
+//     }
+// }

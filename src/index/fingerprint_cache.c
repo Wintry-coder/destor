@@ -207,16 +207,3 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 	// }
 	// g_queue_free(segments);
 }
-
-void LIPA_cache_update(fingerprint *fp, containerid id) {
-
-	GList* elem =  g_list_first(lru_queue->elem_queue);
-	while (elem) {
-	    if (lru_queue->hit_elem((struct LIPA_cacheItem*) (elem->data), fp)) {
-	    	g_hash_table_replace(((struct LIPA_cacheItem*)(elem->data))->kvpairs,
-	    			fp, id);
-	    }
-	    elem = g_list_next(elem);
-	}
-
-}

@@ -56,9 +56,6 @@ void feedback(struct segmentRecipe* sr, char* feature) {
             ((double)(cacheItem->hit_score) - target_ctxtTableItem -> score) * (1.0 / target_ctxtTableItem -> update_time);
 }*/
 
-int lipa_cache_check_id(struct LIPA_cacheItem* cache, int*id) {
-    return cache ->id == *id;
-}
 // struct LIPA_cacheItem* new_lipa_cache_item(struct contextItem* ctxtTableItem, struct segmentRecipe* sr) {
 //     struct LIPA_cacheItem* new_cacheItem = (struct LIPA_cacheItem*)(malloc(sizeof(struct LIPA_cacheItem)));
 
@@ -89,13 +86,4 @@ int lipa_cache_check_id(struct LIPA_cacheItem* cache, int*id) {
 //     }
 //     return new_cacheItem;
 // }
-
-void free_lipa_cache(struct LIPA_cacheItem* cache) {
-    g_hash_table_destroy(cache->kvpairs);
-    free(cache);
-}
-
-int lookup_fingerprint_in_lipa_cache(struct LIPA_cacheItem* cacheItem, fingerprint* fp) {
-    return g_hash_table_contains(cacheItem->kvpairs, fp);
-}
 
