@@ -32,6 +32,7 @@ void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
 struct contextTableList* new_contextTableList(GList *contextList);
 struct segment* copy_segment(struct segment* src, struct segment* dst);
+void LIPA_context_update(struct segment* s);
 
 extern void (*close_context)();
 extern GList* (*context_lookup)(char *key);

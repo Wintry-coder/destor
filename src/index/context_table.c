@@ -54,14 +54,19 @@ struct contextItem *find_item(GList *contextList, int minitem) {
 
     while (contextList){
         current = contextList -> data;
-        if(minitem){
+        if(minitem == 1){
             if (item -> score > current -> score) {
                 item = current;
             }
-        }else{
+        }else if(minitem == 0){
             if (item -> score < current -> score) {
                 item = current;
             }            
+        }else if(minitem == 2){
+            if(current -> id == TEMPORARY_ID){
+                item = current;
+                break;
+            }
         }
         contextList = g_list_next(contextList);
     }
@@ -140,4 +145,20 @@ void free_contextItem(struct contextItem* item) {
     free_segment(item->segment_ptr);
 	item->segment_ptr = NULL;
     free(item);
+}
+
+void LIPA_context_update(struct segment* s)
+{
+    assert(s->features);
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, s->features);
+
+    while(g_hash_table_iter_next(&iter, &key, &value)) {
+        GList* contextList = context_lookup((fingerprint *) key);
+        if (contextList) {
+            struct contextItem* item = find_item(contextList, 2);
+            item -> id = s->id;
+        }
+    }
 }

@@ -5,6 +5,7 @@
 #include "rewrite_phase.h"
 #include "backup.h"
 #include "index/index.h"
+#include "index/context_table.h"
 
 static pthread_t filter_t;
 static int64_t chunk_num;
@@ -291,7 +292,11 @@ static void* filter_thread(void *arg) {
          	}
          	index_update(s->features, sid);
             if (destor.index_specific == INDEX_SPECIFIC_LIPA)
-				LIPA_cache_update_index(s);
+            {
+                LIPA_cache_update_index(s);
+                LIPA_context_update(s);
+            }
+				
          }
 
         free_segment(s);
