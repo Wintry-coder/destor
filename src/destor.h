@@ -248,7 +248,7 @@ struct destor {
 	int index_segment_min;
 	int index_segment_max;
 
-	int index_segment_selection_method[2];
+	int index_segment_selection_method[2];/* [1] The number of selected similar segments */
 	int index_segment_prefech;
 
 	int rewrite_algorithm[2];
