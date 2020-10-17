@@ -142,8 +142,8 @@ struct contextTableList* new_contextTableList(GList *contextList)
 
 void free_contextItem(struct contextItem* item) {
 	printf("free context table item\n");
-    free_segment(item->segment_ptr);
-	item->segment_ptr = NULL;
+    //free_segment(item->segment_ptr);
+	//item->segment_ptr = NULL;
     free(item);
 }
 
