@@ -135,33 +135,53 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 	/* TODO
 	 * prefetch 
 	 */
-	//if(champion->id != TEMPORARY_ID)
-    //GQueue* segments = prefetch_segments(champion->id, prefetchnum);
-	int64_t* ids = kvstore_lookup(feature);
-	if (ids) {
-		index_overhead.lookup_requests++;
-		if (ids[0] != TEMPORARY_ID)
-		{
-    		GQueue* segmentRecipes = prefetch_segments(ids[0], 1);
-    		struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
-			int counter;
-    		for (counter = 0; counter <= prefetchnum && iter != NULL; iter = g_list_next(iter), counter++) {
-        		//LIPA_fingerprint_cache_prefetch(champion->id, feature);
-				struct contextItem *item = iter->data;
-    			if (!lru_cache_hits(lru_queue, &item->id, lipa_cache_check_id)) {
-        			index_overhead.read_prefetching_units++;
-        			struct LIPA_cacheItem* cacheItem = new_lipa_cache_item(item, sr);
-        			assert(cacheItem);
-        			lru_cache_insert(lru_queue, cacheItem, feedback, feature);
-    			}
-    		}
-			if (sr != NULL)
-        		free_segment_recipe(sr);
-    		g_queue_free(segmentRecipes);
+	if(champion->id != TEMPORARY_ID)
+	{
+		GQueue* segments = prefetch_segments(champion->id, prefetchnum);
+		index_overhead.read_prefetching_units++;
+		VERBOSE("Dedup phase: prefetch %d segments into %d lipa cache",
+				g_queue_get_length(segments),
+				destor.index_cache_size);	
+			
+		struct segmentRecipe* sr;
+		while ((sr = g_queue_pop_tail(segments))) {
+		/* From tail to head */
+			if (!lru_cache_hits(lru_queue, &sr->id,
+			segment_recipe_check_id)) {
+				lru_cache_insert(lru_queue, sr, feedback, feature);
+			} else
+			/* Already in cache */
+				free_segment_recipe(sr);
+			sr->champion = champion;
 		}
-	}else{
-			index_overhead.lookup_requests_for_unique++;
+		g_queue_free(segments);		
 	}
+    	
+	// int64_t* ids = kvstore_lookup(feature);
+	// if (ids) {
+	// 	index_overhead.lookup_requests++;
+	// 	if (ids[0] != TEMPORARY_ID)
+	// 	{
+    // 		GQueue* segmentRecipes = prefetch_segments(ids[0], 1);
+    // 		struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);
+	// 		int counter;
+    // 		for (counter = 0; counter <= prefetchnum && iter != NULL; iter = g_list_next(iter), counter++) {
+    //     		//LIPA_fingerprint_cache_prefetch(champion->id, feature);
+	// 			struct contextItem *item = iter->data;
+    // 			if (!lru_cache_hits(lru_queue, &item->id, lipa_cache_check_id)) {
+    //     			index_overhead.read_prefetching_units++;
+    //     			struct LIPA_cacheItem* cacheItem = new_lipa_cache_item(item, sr);
+    //     			assert(cacheItem);
+    //     			lru_cache_insert(lru_queue, cacheItem, feedback, feature);
+    // 			}
+    // 		}
+	// 		if (sr != NULL)
+    //     		free_segment_recipe(sr);
+    // 		g_queue_free(segmentRecipes);
+	// 	}
+	// }else{
+	// 		index_overhead.lookup_requests_for_unique++;
+	// }
 
 
     //struct segmentRecipe* sr = g_queue_pop_head(segmentRecipes);

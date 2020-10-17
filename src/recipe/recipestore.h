@@ -68,6 +68,7 @@ struct segmentRecipe {
 	/* Map fingerprints in the segment to their container IDs.*/
 	GHashTable *kvpairs;
 
+	int hit;
 	/*int hit;
 	int flag;
 	struct contextItem *champion;*/
