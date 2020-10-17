@@ -101,9 +101,9 @@ struct contextItem* new_contextItem(struct segment* segment){
     newItem->id = ItemId++;;
     newItem->updatetime = 0;
 
-    struct segment* newSeg = new_segment_full();
-	newSeg = copy_segment(segment, newSeg);
-	newItem->segment_ptr = newSeg;
+    // struct segment* newSeg = new_segment_full();
+	// newSeg = copy_segment(segment, newSeg);
+	// newItem->segment_ptr = newSeg;
 
 	return newItem;
 }

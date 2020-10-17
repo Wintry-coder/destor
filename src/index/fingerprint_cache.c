@@ -31,11 +31,11 @@ void init_fingerprint_cache(){
 				free_container_meta, lookup_fingerprint_in_container_meta);
 		break;
 	case INDEX_CATEGORY_LOGICAL_LOCALITY:
-	    if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
-	    	lru_queue = new_lru_cache(destor.index_cache_size,
-	    			free_lipa_cache, lookup_fingerprint_in_lipa_cache);
-			break;
-		}
+	    // if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
+	    // 	lru_queue = new_lru_cache(destor.index_cache_size,
+	    // 			free_lipa_cache, lookup_fingerprint_in_lipa_cache);
+		// 	break;
+		// }
 		lru_queue = new_lru_cache(destor.index_cache_size,
 				free_segment_recipe, lookup_fingerprint_in_segment_recipe);
 		break;
@@ -54,18 +54,18 @@ int64_t fingerprint_cache_lookup(fingerprint *fp){
 			break;
 		}
 		case INDEX_CATEGORY_LOGICAL_LOCALITY:{
-			if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
-                struct LIPA_cacheItem* cacheItem = lru_cache_lookup(lru_queue, fp);
-                if (cacheItem) {
-                    //update cache item hit
-                    int64_t id = g_hash_table_lookup(cacheItem->kvpairs, fp);
-                    if (id > TEMPORARY_ID) {
-                        cacheItem->hit_score++;
-                    }
-                    return id;
-                }
-				break;
-			}
+			// if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
+            //     struct LIPA_cacheItem* cacheItem = lru_cache_lookup(lru_queue, fp);
+            //     if (cacheItem) {
+            //         //update cache item hit
+            //         int64_t id = g_hash_table_lookup(cacheItem->kvpairs, fp);
+            //         if (id > TEMPORARY_ID) {
+            //             cacheItem->hit_score++;
+            //         }
+            //         return id;
+            //     }
+			// 	break;
+			// }
 
 
 			struct segmentRecipe* sr = lru_cache_lookup(lru_queue, fp);
@@ -75,6 +75,7 @@ int64_t fingerprint_cache_lookup(fingerprint *fp){
 					WARNING("expect > TEMPORARY_ID, but being %lld", cp->id);
 					assert(cp->id > TEMPORARY_ID);
 				}
+				sr->hit++;
 				return cp->id;
 			}
 			break;
@@ -132,9 +133,6 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
     assert(champion);
 	int prefetchnum = champion ->followers + 1;
 	GList *iter = g_list_find(contextList, champion);
-	/* TODO
-	 * prefetch 
-	 */
 	if(champion->id != TEMPORARY_ID)
 	{
 		GQueue* segments = prefetch_segments(champion->id, prefetchnum);
@@ -152,7 +150,6 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			} else
 			/* Already in cache */
 				free_segment_recipe(sr);
-			sr->champion = champion;
 		}
 		g_queue_free(segments);		
 	}

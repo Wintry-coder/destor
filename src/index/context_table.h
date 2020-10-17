@@ -11,7 +11,7 @@
 
 struct contextItem {
 	int64_t id;
-	struct segment* segment_ptr;
+	//struct segment* segment_ptr;
 	int followers;
 	double score;
 	int updatetime;

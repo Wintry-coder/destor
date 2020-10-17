@@ -293,7 +293,7 @@ static void* filter_thread(void *arg) {
          	index_update(s->features, sid);
             if (destor.index_specific == INDEX_SPECIFIC_LIPA)
             {
-                LIPA_cache_update_index(s);
+                //LIPA_cache_update_index(s);
                 LIPA_context_update(s);
             }
 				
