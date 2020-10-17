@@ -106,7 +106,7 @@ void destor_start() {
 	destor.index_segment_algorithm[1] = 1024;
 	destor.index_segment_min = 128;
 	destor.index_segment_max = 10240;
-	destor.index_sampling_method[0] = INDEX_SAMPLING_UNIFORM;
+	destor.index_sampling_method[0] = INDEX_SAMPLING_MIN;
 	destor.index_sampling_method[1] = 1;
 	destor.index_value_length = 1;
 	destor.index_segment_selection_method[0] = INDEX_SEGMENT_SELECT_TOP;
