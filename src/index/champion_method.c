@@ -9,6 +9,7 @@ struct contextItem *(*champion_choose)(GList *contextList);
  * choose a segment randomly
  */
 static struct contextItem* champion_choose_random(GList* contextList) {
+    assert(contextList);
     srand(time(NULL));
     int contextList_length = g_list_length(contextList);
     int index = rand()/contextList_length;
@@ -21,6 +22,7 @@ static struct contextItem* champion_choose_random(GList* contextList) {
  * otherwise, it may choose a random segment with e probability
  */
 static struct contextItem* champion_choose_greedy(GList* contextList) {
+    assert(contextList);
     srand(time(NULL));
     double randnum = rand()/(RAND_MAX+1.0);
     if (randnum < 1 - EPSILON) {
@@ -35,6 +37,7 @@ static struct contextItem* champion_choose_greedy(GList* contextList) {
  * choose the newest segment as champion
  */
 static struct contextItem* champion_choose_recent(GList* contextList) {
+    assert(contextList);
     GList* recentitem = g_list_last(contextList);
     return recentitem -> data;
 }
