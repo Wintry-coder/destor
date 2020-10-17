@@ -27,11 +27,9 @@ struct contextTableList{
 void init_context_table();
 
 
-struct contextItem *find_item(GList *contextList, int minitem);
+struct contextItem *find_item(GList *contextList, int op);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
-struct contextTableList* new_contextTableList(GList *contextList);
-struct segment* copy_segment(struct segment* src, struct segment* dst);
 void LIPA_context_update(struct segment* s);
 
 extern void (*close_context)();

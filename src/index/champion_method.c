@@ -9,10 +9,10 @@ struct contextItem *(*champion_choose)(GList *contextList);
  * choose a segment randomly
  */
 static struct contextItem* champion_choose_random(GList* contextList) {
-    assert(contextList);
     srand(time(NULL));
+    assert(contextList);
     int contextList_length = g_list_length(contextList);
-    int index = rand()/contextList_length;
+    int index = rand() % contextList_length;
     return g_list_nth_data(contextList, index);
 }
 
