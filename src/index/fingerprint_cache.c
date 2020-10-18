@@ -151,7 +151,8 @@ void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion,
 			/* Already in cache */
 				free_segment_recipe(sr);
 		}
-		g_queue_free(segments);		
+		if(segments)
+			g_queue_free(segments);		
 	}
     	
 	// int64_t* ids = kvstore_lookup(feature);

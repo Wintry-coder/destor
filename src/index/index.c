@@ -97,7 +97,7 @@ void init_index() {
                 destor.index_category[1] = INDEX_CATEGORY_LOGICAL_LOCALITY;
                 destor.index_segment_algorithm[0] = INDEX_SEGMENT_CONTENT_DEFINED;
                 destor.index_segment_selection_method[0] = INDEX_SEGMENT_SELECT_TOP;        
-                destor.index_sampling_method[0] = INDEX_SAMPLING_UNIFORM;
+                destor.index_sampling_method[0] = INDEX_SAMPLING_MIN;
                 destor.index_sampling_method[1] = destor.index_sampling_method[1] > 1 ?
                 destor.index_sampling_method[1] : 256;
                 //fprintf(stdout, "The index specifix is LIPA!\n");

@@ -61,7 +61,8 @@ void index_lookup_lipa(struct segment *s) {
 					//remove  the oldest entry  in  the segment list   
                 }
                 contextList = g_list_remove(contextList, item);
-                free_contextItem(item);
+				if(item)
+                	free_contextItem(item);
             }
         }
         contextList = g_list_append(contextList, newItem);

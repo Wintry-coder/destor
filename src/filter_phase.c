@@ -330,6 +330,7 @@ static void* filter_thread(void *arg) {
 
     /* All files done */
     jcr.status = JCR_STATUS_DONE;
+    
     return NULL;
 }
 

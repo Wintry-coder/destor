@@ -67,6 +67,7 @@ void send_segment(struct segment* s) {
 
 void *dedup_thread(void *arg) {
 	struct segment* s = NULL;
+	
 	while (1) {
 		struct chunk *c = NULL;
 		if (destor.simulation_level != SIMULATION_ALL)
@@ -81,6 +82,7 @@ void *dedup_thread(void *arg) {
 		 */
 		if (!s)
 			continue;
+		
 		/* segmenting success */
 		if (s->chunk_num > 0) {
 			VERBOSE("Dedup phase: the %lldth segment of %lld chunks", segment_num++,
@@ -106,7 +108,7 @@ void *dedup_thread(void *arg) {
 	}
 
 	sync_queue_term(dedup_queue);
-
+	
 	return NULL;
 }
 

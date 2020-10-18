@@ -71,7 +71,7 @@ struct contextItem *find_item(GList *contextList, int op) {
  * Each item in the context list include segment id, score and followers
  */
 void init_context_table() {
-    context_table = g_hash_table_new_full(g_feature_hash, g_feature_equal, free, NULL);
+    context_table = g_hash_table_new_full(g_feature_hash, g_feature_equal, NULL, NULL);
     close_context = close_context_table;
 
     context_lookup = context_table_lookup;
