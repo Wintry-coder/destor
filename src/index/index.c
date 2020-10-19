@@ -145,6 +145,7 @@ void init_index() {
 
 void close_index() {
     close_kvstore();
+    close_context();
 }
 
 extern struct{
@@ -265,6 +266,7 @@ int index_lookup(struct segment* s) {
             && destor.index_segment_selection_method[0] != INDEX_SEGMENT_SELECT_BASE){
         /* Similarity-based */
         s->features = sampling(s->chunks, s->chunk_num);
+        
         /* Now in s->features  
          * key is some feature, the num is determined by ratio and chunk_num
          * value is null

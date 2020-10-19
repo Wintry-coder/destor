@@ -34,19 +34,20 @@ static void* filter_thread(void *arg) {
 
     while (1) {
         struct chunk* c = sync_queue_pop(rewrite_queue);
-
+        fprintf(stderr,"chunk be poped from rq 1 \n");
         if (c == NULL)
             /* backup job finish */
             break;
 
         /* reconstruct a segment */
         struct segment* s = new_segment();
-
+        
         /* segment head */
         assert(CHECK_CHUNK(c, CHUNK_SEGMENT_START));
         free_chunk(c);
-
+        fprintf(stderr,"free chunk 1 \n");
         c = sync_queue_pop(rewrite_queue);
+        
         while (!(CHECK_CHUNK(c, CHUNK_SEGMENT_END))) {
             g_sequence_append(s->chunks, c);
             if (!CHECK_CHUNK(c, CHUNK_FILE_START)
@@ -56,7 +57,7 @@ static void* filter_thread(void *arg) {
             c = sync_queue_pop(rewrite_queue);
         }
         free_chunk(c);
-
+        fprintf(stderr,"free chunk 2 \n");
         /* For self-references in a segment.
          * If we find an early copy of the chunk in this segment has been rewritten,
          * the rewrite request for it will be denied to avoid repeat rewriting. */
@@ -75,7 +76,7 @@ static void* filter_thread(void *arg) {
          * has been rewritten,
          * the rewrite request for it will be denied. */
         index_check_buffer(s);
-
+        fprintf(stderr,"index check buffer \n");
     	GSequenceIter *iter = g_sequence_get_begin_iter(s->chunks);
     	GSequenceIter *end = g_sequence_get_end_iter(s->chunks);
         for (; iter != end; iter = g_sequence_iter_next(iter)) {
@@ -208,7 +209,7 @@ static void* filter_thread(void *arg) {
         }
 
         int full = index_update_buffer(s);
-
+        fprintf(stderr,"index update buffer \n");
         /* Write a SEGMENT_BEGIN */
         segmentid sid = append_segment_flag(jcr.bv, CHUNK_SEGMENT_START, s->chunk_num);
 
@@ -294,13 +295,13 @@ static void* filter_thread(void *arg) {
             if (destor.index_specific == INDEX_SPECIFIC_LIPA)
             {
                 //LIPA_cache_update_index(s);
-                LIPA_context_update(s);
+                LIPA_context_update(s,sid);
             }
 				
          }
 
         free_segment(s);
-
+        
         if(index_lock.wait_threshold > 0 && full == 0){
         	pthread_cond_broadcast(&index_lock.cond);
         }
@@ -309,6 +310,7 @@ static void* filter_thread(void *arg) {
 
         g_hash_table_destroy(recently_rewritten_chunks);
         g_hash_table_destroy(recently_unique_chunks);
+        fprintf(stderr,"free s \n");
 
     }
 
@@ -330,7 +332,7 @@ static void* filter_thread(void *arg) {
 
     /* All files done */
     jcr.status = JCR_STATUS_DONE;
-    
+    //fprintf(stderr,end filter \n");
     return NULL;
 }
 
