@@ -127,12 +127,14 @@ void init_index() {
 
     init_sampling_method();
     init_segmenting_method();
-    init_champion_method();
-
+    
     init_kvstore();
-
-    init_context_table();
-
+    if(destor.index_specific == INDEX_SPECIFIC_LIPA)
+    {
+        init_context_table();
+        init_champion_method();
+    }
+        
     init_fingerprint_cache();
 
     index_overhead.lookup_requests = 0;
@@ -145,7 +147,12 @@ void init_index() {
 
 void close_index() {
     close_kvstore();
-    close_context();
+    if(destor.index_specific == INDEX_SPECIFIC_LIPA)
+    {
+        find_bug();
+        close_context();
+    }
+        
 }
 
 extern struct{

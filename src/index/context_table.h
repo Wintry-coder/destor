@@ -31,6 +31,8 @@ struct contextItem *find_item(GList *contextList, int op);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
 void LIPA_context_update(struct segment* s,int64_t id);
+void find_bug();
+
 
 extern void (*close_context)();
 extern GList* (*context_lookup)(char *key);

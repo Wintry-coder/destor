@@ -146,7 +146,7 @@ void close_kvstore_htable() {
 	NOTICE("flushing hash table successfully!");
 
 	sdsfree(indexpath);
-
+	NOTICE("hash table key num is %d",g_hash_table_size(htable));
 	g_hash_table_destroy(htable);
 }
 
