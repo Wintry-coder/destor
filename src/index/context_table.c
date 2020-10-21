@@ -14,6 +14,7 @@ GList* (*context_lookup)(char *key);
 int (*context_find)(char *key);
 void (*context_update)(char *key, int64_t id);
 
+
 void find_bug()
 {
 	GHashTableIter iter;
@@ -96,8 +97,15 @@ int context_table_find(char* key) {
 	return hit ? 1 : 0;
 }
 
-void context_table_update(char* key, GList* contextList) {
-	g_hash_table_replace(context_table, key, contextList);
+void context_table_update(char* key, int64_t id) {
+    char *feature = malloc(destor.index_key_size);
+    memcpy(feature,key,destor.index_key_size);
+    GList * cList = g_hash_table_lookup(context_table, key);
+    struct segment* s = new_segment_full();
+    struct contextItem* newItem = new_contextItem(s);
+    newItem ->id = id;
+    cList = g_list_append(cList,newItem);
+	g_hash_table_replace(context_table, feature, cList);
 }
 
 
