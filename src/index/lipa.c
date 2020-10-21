@@ -39,8 +39,6 @@ void index_lookup_lipa(struct segment *s) {
     GHashTableIter iter;
     gpointer key, value;
     g_hash_table_iter_init(&iter, s->features);
-
-    //struct contextItem* newItem = new_contextItem(s);
     struct contextItem* champion;
 	/* Each feature will map many segments 
 	 * key is feature	
@@ -48,29 +46,9 @@ void index_lookup_lipa(struct segment *s) {
 	 */
     while(g_hash_table_iter_next(&iter, &key, &value)) {
         GList* contextList = context_lookup((fingerprint *) key);
-        /*if (context_find((fingerprint *) key)) {
-            contextList = context_lookup((fingerprint *) key);
-            int list_length = g_list_length(contextList);
-            if (list_length >= CONTEXT_TABLE_LENGTH) {
-                struct contextItem *item = NULL;
-                if(destor.lipa_update_method == LIPA_MIN){
-                    item = find_item(contextList, 1);
-					//remove  the lowest score  entry  in  the segment list
-                }else{
-                    item = contextList -> data;  
-					//remove  the oldest entry  in  the segment list   
-                }
-                contextList = g_list_remove(contextList, item);
-				if(item)
-                	free_contextItem(item);
-            
-        }
-        contextList = g_list_append(contextList, newItem);
-        context_update((fingerprint *) key, contextList);*/
 		if(contextList)
 		{
         	champion = champion_choose(contextList);
-		
         	//prefetch champion and followers fingerprint into cache
         	fingerprint_lipa_prefetch(contextList, champion, (char*) key);
 		}
