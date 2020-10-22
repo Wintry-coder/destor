@@ -149,7 +149,6 @@ void close_index() {
     close_kvstore();
     if(destor.index_specific == INDEX_SPECIFIC_LIPA)
     {
-        find_bug();
         close_context();
     }
         

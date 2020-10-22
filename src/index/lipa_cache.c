@@ -10,20 +10,24 @@
 void feedback(struct segmentRecipe* sr, char* feature) {
 
     GList* contextList = context_lookup((fingerprint *) feature);
-    if (contextList) {
+    assert(contextList);
     // if the feature exists in context table, update score
-        segmentid id = sr ->id;
-        struct contextItem* elem = contextList -> data;
+    segmentid id = sr ->id;
+    struct contextItem* elem = contextList -> data;
         
-	    while (contextList) {
-            elem = contextList -> data;
-		    if (elem->id == id)
-			    break;
-		    contextList = g_list_next(contextList);
-	    }  
+	while (contextList) {
+        elem = contextList -> data;
+		if (elem->id == id)
+			break;
+		contextList = g_list_next(contextList);
+	}
+    if(contextList)  
+    {
         elem ->updatetime++;
         elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
-    }   
+    }
+
+       
     // if(destor.prefetch_method == PREFETCH_ADAPTIVE){
     //     struct contextItem* champion = sr -> champion;
     //     if(sr->flag == 1)//the segment is the last one
@@ -48,42 +52,5 @@ void feedback(struct segmentRecipe* sr, char* feature) {
     // }
 }
 
-/*void feedback(struct LIPA_cacheItem* cacheItem, char* feature) {
-    struct ctxtTableItem* target_ctxtTableItem = cacheItem ->tableItemPtr;
-    assert(target_ctxtTableItem);
-    target_ctxtTableItem ->update_time ++;
-    target_ctxtTableItem -> score = target_ctxtTableItem -> score +
-            ((double)(cacheItem->hit_score) - target_ctxtTableItem -> score) * (1.0 / target_ctxtTableItem -> update_time);
-}*/
 
-// struct LIPA_cacheItem* new_lipa_cache_item(struct contextItem* ctxtTableItem, struct segmentRecipe* sr) {
-//     struct LIPA_cacheItem* new_cacheItem = (struct LIPA_cacheItem*)(malloc(sizeof(struct LIPA_cacheItem)));
-
-//     new_cacheItem ->id = ctxtTableItem ->id;
-//     new_cacheItem ->hit_score = 0;
-//     new_cacheItem ->flag = 0;
-//     new_cacheItem ->tableItemPtr = ctxtTableItem;
-
-//     new_cacheItem ->kvpairs = g_hash_table_new_full(g_feature_hash, g_feature_equal, NULL, NULL);
-//     if (sr == NULL) {
-
-//         GSequenceIter* chunkIter = g_sequence_get_begin_iter(ctxtTableItem->segment_ptr->chunks);
-//         GSequenceIter* chunkEnd = g_sequence_get_end_iter(ctxtTableItem->segment_ptr->chunks);
-
-//         for(; chunkIter != chunkEnd; chunkIter = g_sequence_iter_next(chunkIter)){
-//             struct chunk* c = g_sequence_get(chunkIter);
-//             g_hash_table_insert(new_cacheItem->kvpairs, &c->fp, TEMPORARY_ID);
-//         }
-
-//     }else {
-//         GHashTableIter tableIter;
-//         gpointer key, value;
-//         g_hash_table_iter_init(&tableIter, sr->kvpairs);
-//         while (g_hash_table_iter_next(&tableIter, &key, &value)) {
-//             g_hash_table_insert(new_cacheItem->kvpairs, &key, ((struct chunkPointer*) value)->id);
-//         }
-
-//     }
-//     return new_cacheItem;
-// }
 

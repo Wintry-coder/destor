@@ -9,28 +9,10 @@
 
 static GHashTable *context_table;
 
+
 void (*close_context)();
 GList* (*context_lookup)(char *key);
-int (*context_find)(char *key);
 void (*context_update)(char *key, int64_t id);
-
-
-void find_bug()
-{
-	GHashTableIter iter;
-	gpointer key, value;
-	g_hash_table_iter_init(&iter, context_table);
-	while (g_hash_table_iter_next(&iter, &key, &value)) {
-        GList * contextList = value;
-        assert(contextList);
-		int numc =  g_list_length(contextList);
-        while (contextList)
-        {
-            struct contextItem* Item = contextList->data;
-            contextList = g_list_next(contextList);
-        }
-	}    
-}
 
 void close_context_table() {
         sds indexpath = sdsdup(destor.working_directory);
@@ -71,30 +53,24 @@ void close_context_table() {
             }
             contextList = g_list_next(contextList);
         }
-//fprintf(stderr,"Now key num is %d\n",i);
         }
 
         /* It is a rough estimation */
         //destor.index_memory_footprint = g_hash_table_size(htable)
 
         //              * (destor.index_key_size + sizeof(int64_t) * destor.index_value_length + 4);
-NOTICE("flushing context table successfully!");
+        NOTICE("flushing context table successfully!");
         fclose(fp);
 
         NOTICE("flushing context table successfully!");
         sdsfree(indexpath);
-    fprintf(stderr,"end the close cttable\n");
-    g_hash_table_destroy(context_table);
+        fprintf(stderr,"end the close cttable\n");
+        g_hash_table_destroy(context_table);
 }
 
 GList* context_table_lookup(char* key) {
     GList * contextList = g_hash_table_lookup(context_table, key);
 	return contextList;
-}
-
-int context_table_find(char* key) {
-	gboolean hit = g_hash_table_contains(context_table, key);
-	return hit ? 1 : 0;
 }
 
 void context_table_update(char* key, int64_t id) {
@@ -104,8 +80,24 @@ void context_table_update(char* key, int64_t id) {
     struct segment* s = new_segment_full();
     struct contextItem* newItem = new_contextItem(s);
     newItem ->id = id;
+    if (cList) {
+        int list_length = g_list_length(cList);
+        if (list_length >= CONTEXT_TABLE_LENGTH) {
+            struct contextItem *item = NULL;
+            if(destor.lipa_update_method == LIPA_MIN){
+                item = find_item(cList, 1);
+                                        //remove  the lowest score  entry  in  the segment list
+            }else{
+                item = cList -> data;
+                                        //remove  the oldest entry  in  the segment list   
+            }
+            cList = g_list_remove(cList, item);
+            if(item)
+            free_contextItem(item);
+        }
+    }
     cList = g_list_append(cList,newItem);
-	g_hash_table_replace(context_table, feature, cList);
+    g_hash_table_replace(context_table, feature, cList);
 }
 
 
@@ -113,27 +105,17 @@ struct contextItem *find_item(GList *contextList, int op) {
     assert(contextList);
     struct contextItem* item = contextList -> data;
     struct contextItem* current = item;
-    if(op == 2 && item->id == TEMPORARY_ID)
-        return item;
     contextList = g_list_next(contextList);
 
     while (contextList){
         current = contextList -> data;
-        if(op == 2){
-            if (current -> id == TEMPORARY_ID) {
-                item = current;
-                break;
-            }            
-        }
         if(op == 1){
-            if (item -> score > current -> score) {
+            if (item -> score > current -> score) 
                 item = current;
-            }
         }
         if(op == 0){
-            if (item -> score < current -> score) {
-                item = current;
-            }            
+            if (item -> score < current -> score) 
+                item = current;                    
         }
         contextList = g_list_next(contextList);
     }
@@ -149,9 +131,7 @@ struct contextItem *find_item(GList *contextList, int op) {
 void init_context_table() {
     context_table = g_hash_table_new_full(g_feature_hash, g_feature_equal, NULL, NULL);
     close_context = close_context_table;
-
     context_lookup = context_table_lookup;
-    context_find = context_table_find;
     context_update = context_table_update;
 
         sds indexpath = sdsdup(destor.working_directory);
@@ -173,7 +153,7 @@ void init_context_table() {
 
                 int id_num, i;
                 fread(&id_num, sizeof(int), 1, fp);
-        //              assert(id_num <= CONTEXT_TABLE_LENGTH);
+                 assert(id_num <= CONTEXT_TABLE_LENGTH);
                 GList *contextList = NULL;
 
                 for (i = 0; i < id_num; i++)
@@ -183,7 +163,7 @@ void init_context_table() {
 //                fprintf(stderr,"%lld   %d\n",newItem->id,newItem->followers);
                 }
 
-                        g_hash_table_insert(context_table, feature, contextList);
+                g_hash_table_insert(context_table, feature, contextList);
             }
             fclose(fp);
         }
@@ -212,40 +192,4 @@ struct contextItem* new_contextItem(struct segment* segment){
 void free_contextItem(struct contextItem* item) {
 	printf("free context table item\n");
     free(item);
-}
-
-void LIPA_context_update(struct segment* s,int64_t id)
-{
-    assert(s->features);
-    GHashTableIter iter;
-    gpointer key, value;
-    g_hash_table_iter_init(&iter, s->features);
-
-    struct contextItem* newItem = new_contextItem(s);
-	/* Each feature will map many segments 
-	 * key is feature	
-	 * value is ids
-	 */
-    newItem ->id = id;
-    while(g_hash_table_iter_next(&iter, &key, &value)) {
-        GList* contextList = g_hash_table_lookup(context_table, key);
-        if (contextList) {
-            int list_length = g_list_length(contextList);
-            if (list_length >= CONTEXT_TABLE_LENGTH) {
-                struct contextItem *item = NULL;
-                if(destor.lipa_update_method == LIPA_MIN){
-                    item = find_item(contextList, 1);
-					//remove  the lowest score  entry  in  the segment list
-                }else{
-                    item = contextList -> data;  
-					//remove  the oldest entry  in  the segment list   
-                }
-                contextList = g_list_remove(contextList, item);
-				if(item)
-                	free_contextItem(item);
-            }
-        }
-        contextList = g_list_append(contextList, newItem);
-        g_hash_table_replace(context_table, key, contextList);
-    }
 }

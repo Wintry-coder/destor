@@ -11,27 +11,18 @@
 
 struct contextItem {
 	int64_t id;
-	//struct segment* segment_ptr;
 	int followers;
 	double score;
 	int updatetime;
 };
 
-struct contextTableList{
-	double meanhit;  //the mean hits of the champion and the followers
-	double deviation;
-	GList* contextList;
-};
 #define CONTEXT_TABLE_LENGTH 4
 
 void init_context_table();
 
-
 struct contextItem *find_item(GList *contextList, int op);
 void free_contextItem(struct contextItem* item);
 struct contextItem* new_contextItem(struct segment* segment);
-void LIPA_context_update(struct segment* s,int64_t id);
-void find_bug();
 
 
 extern void (*close_context)();
