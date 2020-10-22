@@ -51,7 +51,7 @@ void init_champion_method(){
             champion_choose = champion_choose_greedy;
             break;
         case CHAMPIOM_CHOOSE_RECENT:
-            champion_choose = champion_choose_greedy;
+            champion_choose = champion_choose_recent;
             break;
         default:
             fprintf(stderr, "Invalid champion choose method!\n");
