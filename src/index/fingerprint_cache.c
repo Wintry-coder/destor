@@ -129,10 +129,9 @@ void fingerprint_cache_prefetch(int64_t id){
 	}
 }
 
-void fingerprint_lipa_prefetch(GList *contextList, struct contextItem *champion, char* feature) {
+void fingerprint_lipa_prefetch(struct contextItem *champion, char* feature) {
     assert(champion);
 	int prefetchnum = champion ->followers + 1;
-	GList *iter = g_list_find(contextList, champion);
 	if(champion->id != TEMPORARY_ID)
 	{
 		GQueue* segments = prefetch_segments(champion->id, prefetchnum);
