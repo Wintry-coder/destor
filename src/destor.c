@@ -133,6 +133,8 @@ void destor_start() {
 	destor.champion_choose_method = CHAMPIOM_CHOOSE_GREEDY;
 	destor.lipa_update_method = LIPA_MIN;
 	destor.prefetch_method = PREFETCH_TRIAL;
+	destor.context_length = CONTEXT_TABLE_LENGTH;
+	destor.choose_epsilon = EPSILON;
 
 	load_config();
 

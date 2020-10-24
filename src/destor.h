@@ -202,6 +202,10 @@
 #define PREFETCH_TRIAL 1
 #define PREFETCH_ADAPTIVE 2
 
+#define CONTEXT_TABLE_LENGTH 4
+
+#define EPSILON 0.1
+
 struct destor {
 	sds working_directory;
 	int simulation_level;
@@ -291,6 +295,8 @@ struct destor {
 	int backup_retention_time;
 
 	/* The context table */
+	int context_length;
+	int choose_epsilon;
 	int champion_choose_method;
 	int lipa_update_method;
 	int prefetch_method;

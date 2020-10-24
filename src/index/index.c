@@ -128,11 +128,12 @@ void init_index() {
     init_sampling_method();
     init_segmenting_method();
     
-    init_kvstore();
-    if(destor.index_specific == INDEX_SPECIFIC_LIPA)
-    {
+    
+    if(destor.index_specific == INDEX_SPECIFIC_LIPA){
         init_context_table();
         init_champion_method();
+    }else{
+        init_kvstore();
     }
         
     init_fingerprint_cache();
@@ -146,12 +147,11 @@ void init_index() {
 }
 
 void close_index() {
-    close_kvstore();
-    if(destor.index_specific == INDEX_SPECIFIC_LIPA)
-    {
+    if(destor.index_specific == INDEX_SPECIFIC_LIPA){
         close_context();
-    }
-        
+    }else{
+        close_kvstore();
+    }  
 }
 
 extern struct{
@@ -303,9 +303,10 @@ void index_update(GHashTable *features, int64_t id){
     g_hash_table_iter_init(&iter, features);
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         index_overhead.update_requests++;
-        kvstore_update(key, id);
         if(destor.index_specific == INDEX_SPECIFIC_LIPA)
             context_update(key, id);
+        else
+            kvstore_update(key, id);
     }
 }
 

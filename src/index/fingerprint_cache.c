@@ -129,12 +129,11 @@ void fingerprint_cache_prefetch(int64_t id){
 	}
 }
 
-void fingerprint_lipa_prefetch(struct contextItem *champion, char* feature) {
-    assert(champion);
-	int prefetchnum = champion ->followers + 1;
-	if(champion->id != TEMPORARY_ID)
+void fingerprint_lipa_prefetch(struct contextItem* arr, int champion, char* feature) {
+	int prefetchnum = arr[champion].followers + 1;
+	if(arr[champion].id != TEMPORARY_ID)
 	{
-		GQueue* segments = prefetch_segments(champion->id, prefetchnum);
+		GQueue* segments = prefetch_segments(arr[champion].id, prefetchnum);
 		index_overhead.read_prefetching_units++;
 		VERBOSE("Dedup phase: prefetch %d segments into %d lipa cache",
 				g_queue_get_length(segments),

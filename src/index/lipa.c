@@ -25,7 +25,7 @@ extern struct{
 	GSequence *chunks;
 } storage_buffer;
 
-extern struct contextItem *(*champion_choose)(GList *contextList);
+extern int (*champion_choose)(struct contextItem *arr);
 
 /**
  * Input: segment s
@@ -39,20 +39,16 @@ void index_lookup_lipa(struct segment *s) {
     GHashTableIter iter;
     gpointer key, value;
     g_hash_table_iter_init(&iter, s->features);
-    struct contextItem* champion;
 	/* Each feature will map many segments 
 	 * key is feature	
 	 * value is ids
 	 */
     while(g_hash_table_iter_next(&iter, &key, &value)) {
-        GList* contextList = context_lookup((fingerprint *) key);
-		if(contextList)
-		{
-        	champion = champion_choose(contextList);
-        	//prefetch champion and followers fingerprint into cache
-        	fingerprint_lipa_prefetch(champion, (char*) key);
+        struct contextItem* arr = context_lookup(key);
+		if(arr){
+        	int champion = champion_choose(arr);
+        	fingerprint_lipa_prefetch(arr, champion, (char*) key);
 		}
-
     }
     /**
 	 * The following part is same as the part of similar detection

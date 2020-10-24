@@ -9,47 +9,23 @@
 
 void feedback(struct segmentRecipe* sr, char* feature) {
 
-    GList* contextList = context_lookup((fingerprint *) feature);
-    assert(contextList);
-    // if the feature exists in context table, update score
+    struct contextItem* arr = context_lookup(feature);
+    assert(arr);
     segmentid id = sr ->id;
-    struct contextItem* elem = contextList -> data;
-        
-	while (contextList) {
-        elem = contextList -> data;
-		if (elem->id == id)
-			break;
-		contextList = g_list_next(contextList);
-	}
-    if(contextList)  
-    {
-        elem ->updatetime++;
-        elem ->score = elem ->score + ((double)(sr->hit) - elem ->score) * (1.0 / elem ->updatetime);
+    int index = -1;
+    // if the feature exists in context table, update score
+    for(int i = 0;i<destor.context_length;i++){
+        if(id == arr[i].id)
+        {
+            index = i;
+            break;
+        }
     }
-
-       
-    // if(destor.prefetch_method == PREFETCH_ADAPTIVE){
-    //     struct contextItem* champion = sr -> champion;
-    //     if(sr->flag == 1)//the segment is the last one
-    //     {
-    //         /*
-    //          * The last segment  feedbacks its champion
-    //          */
-    //         /*int threshold = champion->meanhit - champion->deviation;
-    //         if(sr->hit < threshold)
-    //         {
-    //             champion->followers--;
-    //         }
-    //         else
-    //         {
-    //             champion->followers++;
-    //         }*/
-    //     }
-    //     if(sr->flag == 0)//update the threshold
-    //     {
-            
-    //     }
-    // }
+    if(index != -1)  
+    {
+        ++arr[index].updatetime;
+        arr[index].score = arr[index].score + (sr->hit - arr[index].score) * (1.0 / arr[index].updatetime);
+    }
 }
 
 
