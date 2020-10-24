@@ -9,22 +9,14 @@
 
 void feedback(struct segmentRecipe* sr, char* feature) {
 
-    struct contextItem* arr = context_lookup(feature);
+    struct contextItem* arr = sr->champion;
     assert(arr);
-    segmentid id = sr ->id;
-    int index = -1;
-    // if the feature exists in context table, update score
-    for(int i = 0;i<destor.context_length;i++){
-        if(id == arr[i].id)
-        {
-            index = i;
-            break;
-        }
-    }
-    if(index != -1)  
-    {
-        ++arr[index].updatetime;
-        arr[index].score = arr[index].score + (sr->hit - arr[index].score) * (1.0 / arr[index].updatetime);
+    // if the champion exists in context table and sr is champion sr, update its score
+    if(sr->flag == 1){
+        //flag == 1 means it is champion
+        //flag == 0 means it is follower
+        ++arr->updatetime;
+        arr->score = arr->score + (sr->hit - arr->score) * (1.0 / arr->updatetime);        
     }
 }
 

@@ -47,7 +47,7 @@ void index_lookup_lipa(struct segment *s) {
         struct contextItem* arr = context_lookup(key);
 		if(arr){
         	int champion = champion_choose(arr);
-        	fingerprint_lipa_prefetch(arr, champion, (char*) key);
+        	fingerprint_lipa_prefetch(arr, champion);
 		}
     }
     /**

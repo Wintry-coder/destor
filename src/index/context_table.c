@@ -68,7 +68,7 @@ void close_context_table() {
 			exit(1);
 		}
         int num = 0;
-        while(num <= destor.context_length-1 &&(cp)[num].id != TEMPORARY_ID) ++num;
+        while(num <= destor.context_length-1 &&get_table_context(cp)[num].id != TEMPORARY_ID) ++num;
 
 		if(fwrite(&num, sizeof(int), 1, fp) != 1){
 			perror("Fail to write a length!");

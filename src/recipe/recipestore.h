@@ -69,9 +69,8 @@ struct segmentRecipe {
 	GHashTable *kvpairs;
 
 	int hit;
-	/*int hit;
 	int flag;
-	struct contextItem *champion;*/
+	struct contextItem * champion; //Without it, we can't feedback
 };
 
 /*

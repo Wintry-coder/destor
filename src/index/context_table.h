@@ -20,7 +20,7 @@ void init_context_table();
 void close_context_table();
 
 extern void (*close_context)();
-extern GList* (*context_lookup)(char *key);
+extern struct contextItem* (*context_lookup)(char *key);
 extern void (*context_update)(char *key, int64_t id);
 
 #endif 

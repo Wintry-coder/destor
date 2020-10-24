@@ -54,20 +54,6 @@ int64_t fingerprint_cache_lookup(fingerprint *fp){
 			break;
 		}
 		case INDEX_CATEGORY_LOGICAL_LOCALITY:{
-			// if (destor.index_specific == INDEX_SPECIFIC_LIPA) {
-            //     struct LIPA_cacheItem* cacheItem = lru_cache_lookup(lru_queue, fp);
-            //     if (cacheItem) {
-            //         //update cache item hit
-            //         int64_t id = g_hash_table_lookup(cacheItem->kvpairs, fp);
-            //         if (id > TEMPORARY_ID) {
-            //             cacheItem->hit_score++;
-            //         }
-            //         return id;
-            //     }
-			// 	break;
-			// }
-
-
 			struct segmentRecipe* sr = lru_cache_lookup(lru_queue, fp);
 			if(sr){
 				struct chunkPointer* cp = g_hash_table_lookup(sr->kvpairs, fp);
@@ -129,7 +115,7 @@ void fingerprint_cache_prefetch(int64_t id){
 	}
 }
 
-void fingerprint_lipa_prefetch(struct contextItem* arr, int champion, char* feature) {
+void fingerprint_lipa_prefetch(struct contextItem* arr, int champion) {
 	int prefetchnum = arr[champion].followers + 1;
 	if(arr[champion].id != TEMPORARY_ID)
 	{
@@ -140,14 +126,21 @@ void fingerprint_lipa_prefetch(struct contextItem* arr, int champion, char* feat
 				destor.index_cache_size);	
 			
 		struct segmentRecipe* sr;
+		int i = 0;
 		while ((sr = g_queue_pop_tail(segments))) {
 		/* From tail to head */
 			if (!lru_cache_hits(lru_queue, &sr->id,
 			segment_recipe_check_id)) {
-				lru_cache_insert(lru_queue, sr, feedback, feature);
+				sr->champion = &arr[champion];//help feedback
+				if(i == prefetchnum - 1)
+					sr->flag = 1;//1 indicates sr is champion 
+				else
+					sr->flag = 0;//0 indicates sr is follower 
+				lru_cache_insert(lru_queue, sr, feedback, NULL);
 			} else
 			/* Already in cache */
 				free_segment_recipe(sr);
+			i++;
 		}
 		if(segments)
 			g_queue_free(segments);		
