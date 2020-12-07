@@ -134,8 +134,10 @@ void fingerprint_lipa_prefetch(struct contextItem* arr, int champion) {
 				sr->champion = &arr[champion];//help feedback
 				if(i == prefetchnum - 1)
 					sr->flag = 1;//1 indicates sr is champion 
+				else if(prefetchnum != 1 && i == 0)
+					sr->flag = 2;//2 indicates sr is last follower 
 				else
-					sr->flag = 0;//0 indicates sr is follower 
+					sr->flag = 0;//0 indicates sr is other follower 
 				lru_cache_insert(lru_queue, sr, feedback, NULL);
 			} else
 			/* Already in cache */
